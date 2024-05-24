@@ -74,18 +74,6 @@
                       <label class="form-label" for="form3Example97">Email ID</label>
                     </div>
 
-                    <div class="d-md-flex justify-content-start align-items-center mb-4 py-2">
-                      <h6 class="mb-0 me-4">Gender: </h6>
-                      <div class="form-check form-check-inline mb-0 me-4">
-                        <input class="form-check-input" type="radio" name="inlineRadioOptions" id="femaleGender" value="option1" />
-                        <label class="form-check-label" for="femaleGender">Female</label>
-                      </div>
-                      <div class="form-check form-check-inline mb-0 me-4">
-                        <input class="form-check-input" type="radio" name="inlineRadioOptions" id="maleGender" value="option2" />
-                        <label class="form-check-label" for="maleGender">Male</label>
-                      </div>
-                    </div>
-
                       <div class="col-md-6 mb-4">
                         <select data-mdb-select-init class="form-select">
                           <option value="1">User Type</option>
