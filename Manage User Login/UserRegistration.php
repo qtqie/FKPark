@@ -96,10 +96,15 @@
                       </div>
                     </div>
 
+                    <div class="mb-4">
+                      <label class="form-label" for="formFile">Upload Grant</label>
+                      <input type="file" id="formFile" class="form-control form-control-lg">
+                    </div>
+
 
                     <div class="d-flex justify-content-end pt-3">
                       <button type="button" data-mdb-button-init data-mdb-ripple-init class="btn btn-light btn-lg">Reset all</button>
-                      <button type="button" data-mdb-button-init data-mdb-ripple-init class="btn btn-warning btn-lg ms-2">Submit form</button>
+                      <button type="button" data-mdb-button-init data-mdb-ripple-init class="btn btn-warning btn-lg ms-2">Submit</button>
                     </div>
 
                   </div>
