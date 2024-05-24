@@ -11,12 +11,12 @@
     <style>
       html, body {
         height: 100%;
-        background-color: #800000;
+        background-color: #40E0D0;
       }
     </style>
   </head>
   <body>
-    <section class="vh-100" style="background-color: #800000;">
+    <section class="vh-100" style="background-color: #40E0D0;">
       <div class="container py-5 h-100">
         <div class="row d-flex justify-content-center align-items-center h-100">
           <div class="col col-xl-10">
@@ -73,6 +73,7 @@
                       <input type="text" id="form3Example97" class="form-control form-control-lg" />
                       <label class="form-label" for="form3Example97">Email ID</label>
                     </div>
+
 
                       <div class="col-md-6 mb-4">
                         <select data-mdb-select-init class="form-select">
