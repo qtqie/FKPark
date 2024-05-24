@@ -9,7 +9,7 @@
     <title>FKPark</title>
     <link href="https://png.pngtree.com/png-clipart/20190619/original/pngtree-vector-car-icon-png-image_3989896.jpg" rel="icon">
 </head>
-<section class="vh-100" style="background-color: #800000;">
+<section class="vh-100" style="background-color: #40E0D0;">
   <div class="container py-5 h-100">
     <div class="row d-flex justify-content-center align-items-center h-100">
       <div class="col col-xl-10">
