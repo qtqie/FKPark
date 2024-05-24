@@ -27,7 +27,7 @@
                 </div>
                 <div class="col-xl-6">
                   <div class="card-body p-md-5 text-black">
-                    <h3 class="mb-5 text-uppercase">Vehicle registration form</h3>
+                    <h3 class="mb-5 text-uppercase">User registration form</h3>
 
                     <div data-mdb-input-init class="form-outline mb-4">
                       <input type="text" id="form3Example8" class="form-control form-control-lg" />
