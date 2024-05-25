@@ -119,8 +119,8 @@ footer {
     <li class="dropdown">
       <a href="booking" class="dropbtn">Booking</a>
       <div class="dropdown-content">
-        <a href="#">Add Booking</a>
-        <a href="#">View Booking</a>
+        <a href="AddBooking.php">Add Booking</a>
+        <a href="ViewBooking.php">View Booking</a>
       </div>
     </li>
 
@@ -151,50 +151,49 @@ footer {
 <article>
   <h2>Booking Confirmation</h2>
 
-  <div>
-    <p>Please confirm your booking information:</p>
-    <table>
-      <tr>
-        <td><strong>Parking ID:</strong></td>
-        <td>1</td>
-      </tr>
-      <tr>
-        <td><strong>Area:</strong></td>
-        <td>A1</td>
-      </tr>
-      <tr>
-        <td><strong>Spot Number:</strong></td>
-        <td>01</td>
-      </tr>
-      <tr>
-        <td><strong>Vehicle Registration Number:</strong></td>
-        <td>FB5989</td>
-      </tr>
-      <tr>
-        <td><strong>Date:</strong></td>
-        <td>15/5/2024</td>
-      </tr>
-      <tr>
-        <td><strong>Start Time:</strong></td>
-        <td>9.00 AM</td>
-      </tr>
-      <tr>
-        <td><strong>End Time:</strong></td>
-        <td>5.00 PM</td>
-      </tr>
-      <tr>
-        <td><strong>Status:</strong></td>
-        <td>Available</td>
-      </tr>
-    </table>
-  </div>
+  <?php
+  if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    // Retrieve the form data
+    $carPlate = htmlspecialchars($_POST['car-plate']);
+    $startTime = htmlspecialchars($_POST['start-time']);
+    $date = htmlspecialchars($_POST['date']);
+    $duration = htmlspecialchars($_POST['duration']);
+
+    // Display the form data
+    echo "
+      <div>
+        <p>Please confirm your booking information:</p>
+        <table>
+          <tr>
+            <td><strong>Car Plate Number:</strong></td>
+            <td>$carPlate</td>
+          </tr>
+          <tr>
+            <td><strong>Start Time:</strong></td>
+            <td>$startTime</td>
+          </tr>
+          <tr>
+            <td><strong>Date:</strong></td>
+            <td>$date</td>
+          </tr>
+          <tr>
+            <td><strong>Duration (hours):</strong></td>
+            <td>$duration</td>
+          </tr>
+        </table>
+      </div>
+    ";
+  } else {
+    echo "<p>No booking information received. Please fill in the form.</p>";
+  }
+  ?>
 
   <button onclick="proceedToCheckout()">Proceed to Checkout</button>
 
   <script>
   function proceedToCheckout() {
     // Redirect to the checkout page
-    window.location.href = "checkout.html";
+    window.location.href = "CheckOutBooking.php";
   }
   </script>
 </article>
