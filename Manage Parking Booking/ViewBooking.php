@@ -153,8 +153,8 @@ td.date, td.start-time, td.end-time {
     <li class="dropdown">
       <a href="booking" class="dropbtn">Booking</a>
       <div class="dropdown-content">
-        <a href="#">Add Booking</a>
-        <a href="#">View Booking</a>
+        <a href="Addbooking.php">Add Booking</a>
+        <a href="ViewBooking.php">View Booking</a>
       </div>
     </li>
 
@@ -184,44 +184,45 @@ td.date, td.start-time, td.end-time {
 
 <article>
   <h2>View Parking</h2>
+  <form method="post">
+    <label for="status">Filter by Status:</label>
+    <select name="Status" id="Status">
+        <option value="all">All Parking</option>
+        <option value="Available">Available Parking</option>
+    </select>
+    <button type="submit">Filter</button>
+</form>
+
+  </form>
   <table>
     <thead>
       <tr>
         <th>Parking ID</th>
         <th>Area</th>
         <th>Spot Number</th>
-        <th>Vehicle Registration Number</th>
-        <th class="date">Date</th>
-        <th class="start-time">Start Time</th>
-        <th class="end-time">End Time</th>
         <th>Status</th>
         <th>Actions</th>
       </tr>
     </thead>
     <tbody>
-      <tr>
-        <td>1</td>
-        <td>A1</td>
-        <td>01</td>
-        <td>FB5989</td>
-        <td class="date">15/5/2024</td>
-        <td class="start-time">9.00 AM</td>
-        <td class="end-time">5.00 PM</td>
-        <td>Available</td>
-        <td><button>Book</button></td>
-      </tr>
-      <tr>
-        <td>2</td>
-        <td>A1</td>
-        <td>02</td>
-        <td>FB5989</td>
-        <td class="date">15/5/2024</td>
-        <td class="start-time">9.00 AM</td>
-        <td class="end-time">5.00 PM</td>
-        <td>Occupied</td>
-        <td><button disabled>Book</button></td>
-      </tr>
-      <!-- Additional rows as needed -->
+    <?php
+      // Include the PHP file to connect to the database
+      include 'parkingsubmit.php';
+
+      // Fetch data from the database
+      $parkingspots = parking_spots();
+
+      // Output data of each row
+      foreach ($parkingspots as $spot) {
+          echo "<tr>";
+          echo "<td>" . $spot['parking_id'] . "</td>";
+          echo "<td>" . $spot['area'] . "</td>";
+          echo "<td>" . $spot['spot_number'] . "</td>";
+          echo "<td>" . $spot['status'] . "</td>";
+          echo "<td><a href='ParkingBooking.php'><button>Book</button></a></td>";
+          echo "</tr>";
+      }
+      ?>
     </tbody>
   </table>
 </article>
@@ -232,4 +233,3 @@ td.date, td.start-time, td.end-time {
 
 </body>
 </html>
-
