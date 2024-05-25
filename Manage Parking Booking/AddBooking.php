@@ -196,10 +196,10 @@ li a:hover:not(.active) {
     <li><a class="active" href="#home">Home</a></li>
 
     <li class="dropdown">
-      <a href="booking" class="dropbtn">Booking</a>
+      <a href="AddBooking.php" class="dropbtn">Booking</a>
       <div class="dropdown-content">
-        <a href="#">Add Booking</a>
-        <a href="#">View Booking</a>
+        <a href="AddBooking.php">Add Booking</a>
+        <a href="ViewBooking.php">View Booking</a>
       </div>
     </li>
 
@@ -229,7 +229,8 @@ li a:hover:not(.active) {
 
 <section>
   <article>
-    <form action="/action_page.php">
+  <form action="submit_bookingtest.php" method="post">
+
       <label for="name">Name:</label>
       <input type="text" id="name" name="name" value="ABC">
       
