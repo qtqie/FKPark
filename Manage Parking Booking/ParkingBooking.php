@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Parking</title>
+<title>Parking Booking</title>
 <style>
 * {
   box-sizing: border-box;
@@ -148,8 +148,8 @@ footer {
     <li class="dropdown">
       <a href="booking" class="dropbtn">Booking</a>
       <div class="dropdown-content">
-        <a href="#">Add Booking</a>
-        <a href="#">View Booking</a>
+        <a href="AddBooking.php">Add Booking</a>
+        <a href="ViewBooking.php">View Booking</a>
       </div>
     </li>
 
@@ -179,7 +179,7 @@ footer {
 
 <article>
   <h2>Parking</h2>
-  <form>
+  <form action="ConfirmBookingPage.php" method="post">
     <label for="car-plate">Car Plate Number:</label>
     <input type="text" id="car-plate" name="car-plate" required>
 
