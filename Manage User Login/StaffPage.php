@@ -166,9 +166,17 @@ footer {
       </div>
     </li>
 
+    <li class="dropdown">
+      <a href="ManageProfile" class="dropbtn">Profile</a>
+      <div class="dropdown-content">
+        <a href="#">Manage User Profile</a>
+        <a href="#">Manage Vehicle Information</a>
+        <a href="#">Approve Registrations</a>
+      </div>
+    </li>
+
     <li><a href="#tsummon">Traffic Summon</a></li>
 
-    <li><a href="#help">Help</a></li>
 
     <li class="dropdown">
       <a href="Parkingsetting" class="dropbtn">Parking Setting</a>
@@ -180,12 +188,8 @@ footer {
       </div>
     </li>
 
-    <li style="float:right" class="dropdown">
-      <a href="profile" class="dropbtn">Profile</a>
-      <div class="dropdown-content">
-        <a href="#">Sign Up</a>
-        <a href="#">Log In</a>
-      </div>
+    <li><a href="#help">Help</a></li>
+
     </li>
   </ul>
 </header>
