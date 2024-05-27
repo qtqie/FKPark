@@ -3,7 +3,7 @@
 $servername = "localhost";
 $username = "root";
 $password = "";
-$dbname = "your_database_name";
+$dbname = "fkpark_db";
 
 // Create connection
 $conn = new mysqli($servername, $username, $password, $dbname);
@@ -16,12 +16,12 @@ if ($conn->connect_error) {
 // Check if form was submitted
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Retrieve the form data
-    $userid = htmlspecialchars($_POST['userid']);
-    $password = htmlspecialchars($_POST['password']);
+    $user_id = htmlspecialchars($_POST['user_id']);
+    $user_pw = htmlspecialchars($_POST['user_pw']);
 
     // Prepare and bind the SQL statement
     $stmt = $conn->prepare("INSERT INTO users (user_id, user_pw) VALUES (?, ?)");
-    $stmt->bind_param("ss", $userid, $password);
+    $stmt->bind_param("ss", $user_id, $user_pw);
 
     // Execute the statement and check for success
     if ($stmt->execute()) {
