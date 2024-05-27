@@ -146,41 +146,23 @@ footer {
   <ul>
     <li><a class="active" href="#home">Home</a></li>
 
-    <li class="dropdown">
-      <a href="booking" class="dropbtn">Booking</a>
-      <div class="dropdown-content">
-        <a href="Addbooking.php">Add Booking</a>
-        <a href="ViewBooking.php">View Booking</a>
-      </div>
-    </li>
-
-    <li><a href="#tsummon">Traffic Summon</a></li>
-
-    <li><a href="#help">Help</a></li>
-
-    <li class="dropdown">
-      <a href="Parkingsetting" class="dropbtn">Parking Setting</a>
-      <div class="dropdown-content">
-        <a href="#">Create Park</a>
-        <a href="#">Update Park</a>
-        <a href="#">Delete Park</a>
-        <a href="#">View Park</a>
-      </div>
-    </li>
 
     <li style="float:right" class="dropdown">
-      <a href="profile" class="dropbtn">Profile</a>
+      <a href="profile" class="dropbtn">Log In</a>
       <div class="dropdown-content">
         <a href="#">Sign Up</a>
         <a href="#">Log In</a>
       </div>
     </li>
+
+    <li><a href="#help">About Us</a></li>
+
+    <li><a href="#help">Help</a></li>
   </ul>
 </header>
 
 <article>
-  <h2>Welcome to the Fakulti Komputeran Park Booking system.</h2>
-  <p>Here, you can book parking spaces, view your bookings, and manage your parking settings with ease.</p>
+  <h2>Welcome to the Fakulti Komputeran Parking Booking system.</h2>
 
   <!-- Bootstrap Carousel -->
   <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
@@ -222,3 +204,4 @@ footer {
 
 </body>
 </html>
+
