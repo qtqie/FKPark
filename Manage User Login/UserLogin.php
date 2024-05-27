@@ -31,13 +31,13 @@
                   <h5 class="fw-normal mb-3 pb-3" style="letter-spacing: 1px;">Sign into your account</h5>
 
                   <div data-mdb-input-init class="form-outline mb-4">
-                    <input type="email" id="form2Example17" class="form-control form-control-lg" />
-                    <label class="form-label" for="form2Example17">Email address</label>
+                    <input type="text" id="userid" class="form-control form-control-lg" />
+                    <label class="form-label" for="userid">User ID</label>
                   </div>
 
                   <div data-mdb-input-init class="form-outline mb-4">
-                    <input type="password" id="form2Example27" class="form-control form-control-lg" />
-                    <label class="form-label" for="form2Example27">Password</label>
+                    <input type="password" id="password" class="form-control form-control-lg" />
+                    <label class="form-label" for="password">Password</label>
                   </div>
 
                   <div class="pt-1 mb-4">
@@ -50,6 +50,22 @@
                   <a href="#!" class="small text-muted">Terms of use.</a>
                   <a href="#!" class="small text-muted">Privacy policy</a>
                 </form>
+
+                <?php
+                include 'login.php';
+
+                $login = $loginpage ();
+
+                  foreach ($login as $loginpage){
+
+                    echo "<tr>";
+                    echo "<td>" . $loginpage['user_id'] . "</td>";
+                    echo "<td>" . $loginpage['user_pw'] . "</td>";
+                    echo "</tr>";
+    
+                  }
+                  ?>
+                
 
               </div>
             </div>
