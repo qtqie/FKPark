@@ -148,11 +148,7 @@ footer {
 
 
     <li style="float:right" class="dropdown">
-      <a href="profile" class="dropbtn">Log In</a>
-      <div class="dropdown-content">
-        <a href="#">Sign Up</a>
-        <a href="#">Log In</a>
-      </div>
+      <a href="login.blade.php" class="dropbtn">Log In</a>
     </li>
 
     <li><a href="#help">About Us</a></li>
@@ -204,4 +200,3 @@ footer {
 
 </body>
 </html>
-
