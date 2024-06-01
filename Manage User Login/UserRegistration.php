@@ -11,12 +11,12 @@
     <style>
       html, body {
         height: 100%;
-        background-color: #40E0D0;
+        background-color: #3EA99F;
       }
     </style>
   </head>
   <body>
-    <section class="vh-100" style="background-color: #40E0D0;">
+    <section class="vh-100" style="background-color: #3EA99F;">
       <div class="container py-5 h-100">
         <div class="row d-flex justify-content-center align-items-center h-100">
           <div class="col col-xl-10">
@@ -29,73 +29,65 @@
                   <div class="card-body p-md-5 text-black">
                     <h3 class="mb-5 text-uppercase">User registration form</h3>
 
+                    <form action="submitreg.blade.php" method="post" enctype="multipart/form-data">
+
                     <div data-mdb-input-init class="form-outline mb-4">
-                      <input type="text" id="form3Example8" class="form-control form-control-lg" />
-                      <label class="form-label" for="form3Example8">Full Name</label>
+                      <input type="text" id="user_name" class="form-control form-control-lg" name="user_name" />
+                      <label>Full Name</label>
                     </div>
 
                     <div data-mdb-input-init class="form-outline mb-4">
-                      <input type="text" id="form3Example8" class="form-control form-control-lg" />
-                      <label class="form-label" for="form3Example8">Password</label>
+                      <input type="password" name="user_pw" id="user_pw" class="form-control form-control-lg" />
+                      <label>Password</label>
                     </div>
 
 
                     <div class="row">
                       <div class="col-md-6 mb-4">
                         <div data-mdb-input-init class="form-outline">
-                          <input type="text" id="form3Example1m1" class="form-control form-control-lg" />
-                          <label class="form-label" for="form3Example1m1">Vehicle's number plate</label>
+                          <input type="text" name="vehicle_plate" id="vehicle_plate" class="form-control form-control-lg" />
+                          <label>Vehicle's number plate</label>
                         </div>
                       </div>
+
+                      <div data-mdb-input-init class="form-outline mb-4">
+                        <input type="text" id="vehicle_type" class="form-control form-control-lg" name="vehicle_type" />
+                        <label class="form-label">Vehicle Type</label>
+                      </div>
+
                       <div class="col-md-6 mb-4">
                         <div data-mdb-input-init class="form-outline">
-                          <input type="text" id="form3Example1n1" class="form-control form-control-lg" />
-                          <label class="form-label" for="form3Example1n1">Student/Staff ID</label>
+                          <input type="text" id="user_id" class="form-control form-control-lg" name="user_id" />
+                          <label class="form-label" >Student/Staff ID</label>
                         </div>
                       </div>
                     </div>
-                    <div class="row">
-                      <div class="col-md-6 mb-4">
-                        <select data-mdb-select-init class="form-select">
-                          <option value="1">Vehicle Type</option>
-                          <option value="2">MPV</option>
-                          <option value="3">Car</option>
-                          <option value="4">Motorcycle</option>
-                        </select>
-                      </div>
 
                     <div data-mdb-input-init class="form-outline mb-4">
-                      <input type="text" id="form3Example8" class="form-control form-control-lg" />
-                      <label class="form-label" for="form3Example8">Address</label>
-                    </div>
-
-                    <div data-mdb-input-init class="form-outline mb-4">
-                      <input type="text" id="form3Example97" class="form-control form-control-lg" />
-                      <label class="form-label" for="form3Example97">Email ID</label>
+                      <input type="email" id="user_email" class="form-control form-control-lg"  name="user_email"/>
+                      <label class="form-label">Email ID</label>
                     </div>
 
 
-                      <div class="col-md-6 mb-4">
-                        <select data-mdb-select-init class="form-select">
-                          <option value="1">User Type</option>
-                          <option value="2">Student</option>
-                          <option value="3">Staff</option>
-                          <option value="4">Administrator</option>
-                        </select>
-                      </div>
+                    <div data-mdb-input-init class="form-outline mb-4">
+                      <input type="text" id="user_type" class="form-control form-control-lg" name="user_type" />
+                      <label class="form-label">User Type</label>
+                    </div>
+
+                    <div data-mdb-input-init class="form-outline mb-4">
+                      <input type="text" id="user_address" class="form-control form-control-lg" name="user_address"/>
+                      <label class="form-label" >Address</label>
                     </div>
 
                     <div class="mb-4">
-                      <label class="form-label" for="formFile">Upload Grant</label>
-                      <input type="file" id="formFile" class="form-control form-control-lg">
+                      <label class="form-label" >Upload Grant</label>
+                      <input type="file" id="user_grant" class="form-control form-control-lg" name="user_grant">
                     </div>
 
 
-                    <div class="d-flex justify-content-end pt-3">
-                      <button type="button" data-mdb-button-init data-mdb-ripple-init class="btn btn-light btn-lg">Reset all</button>
-                      <button type="button" data-mdb-button-init data-mdb-ripple-init class="btn btn-warning btn-lg ms-2">Submit</button>
+                    <div class="pt-1 mb-4">
+                      <button class="btn btn-dark btn-lg btn-block" type="submit">Login</button>
                     </div>
-
                   </div>
                 </div>
               </div>
@@ -105,5 +97,57 @@
       </div>
     </div>
   </section>
+    </form>
+
+    <?php
+                  // Database connection parameters
+                  $servername = "localhost";
+                  $username = "root";
+                  $password = "";
+                  $dbname = "fkpark_db";
+
+                  // Create connection
+                  $conn = new mysqli($servername, $username, $password, $dbname);
+
+                  // Check connection
+                  if ($conn->connect_error) {
+                      die("Connection failed: " . $conn->connect_error);
+                  }
+
+                  // Check if form was submitted
+                  if ($_SERVER["REQUEST_METHOD"] == "POST") {
+                      // Retrieve the form data
+                      $user_name = htmlspecialchars($_POST['user_name']);
+                      $user_pw = htmlspecialchars($_POST['user_pw']);
+                      $vehicle_plate = htmlspecialchars($_POST['vehicle_plate']);
+                      $vehicle_type = htmlspecialchars($_POST['vehicle_type']);
+                      $user_id = htmlspecialchars($_POST['user_id']);
+                      $user_email = htmlspecialchars($_POST['user_email']);
+                      $user_type = htmlspecialchars($_POST['user_type']);
+                      $user_address = htmlspecialchars($_POST['user_address']);
+              
+
+
+                      // Prepare and bind the SQL statement
+                      $stmt = $conn->prepare("INSERT INTO registration  (user_name, user_pw, vehicle_plate, vehicle_type, user_id, user_email, user_type, user_address) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+                      $stmt->bind_param("ssssssss", $user_name, $user_pw, $vehicle_plate, $vehicle_type, $user_id, $user_email, $user_type, $user_address);
+
+                      // Execute the statement and check for success
+                      if ($stmt->execute()) {
+                          echo "New record created successfully";
+                      } else {
+                          echo "Error: " . $stmt->error;
+                      }
+
+                      // Close the statement and connection
+                      $stmt->close();
+                      $conn->close();
+
+                    
+                  }
+                  ?>
+
+                  
 </body>
 </html>
+
