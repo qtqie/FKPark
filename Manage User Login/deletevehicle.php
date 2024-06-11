@@ -1,37 +1,32 @@
 <?php
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-  $id = $_POST['vehicle_id'];
+// Database credentials
+$servername = "localhost";
+$username = "root";
+$password = "";
+$dbname = "fkpark_db";
 
-  // Database connection
-  $conn = new mysqli($servername, $username, $password, $dbname);
+// Create connection
+$conn = new mysqli($servername, $username, $password, $dbname);
 
-  if ($conn->connect_error) {
+// Check connection
+if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
-  }
-
-  // SQL to delete a record
-  $sql = "DELETE FROM vehicle_info WHERE vehicle_id = ?";
-
-  if ($stmt = $conn->prepare($sql)) {
-    $stmt->bind_param("i", $vehicle_id);
-    if ($stmt->execute()) {
-      echo "Record deleted successfully";
-    } else {
-      echo "Error deleting record: " . $stmt->error;
-    }
-    $stmt->close();
-  } else {
-    echo "Error preparing statement: " . $conn->error;
-  }
-
-  $conn->close();
-
-  // Redirect back to the main page
-  header("Location: viewvehicle.php");
-  exit();
-} else {
-  // Redirect if accessed directly
-  header("Location: viewvehicle.php");
-  exit();
 }
+
+if (isset($_GET['id'])) {
+    $id = $_GET['id'];
+    $sql = "DELETE FROM vehicle_info WHERE id=$id";
+
+    if ($conn->query($sql) === TRUE) {
+        echo "Record deleted successfully";
+    } else {
+        echo "Error deleting record: " . $conn->error;
+    }
+
+    header("Location: viewvehicle.php");
+} else {
+    header("Location: viewvehicle.php");
+}
+
+$conn->close();
 ?>
