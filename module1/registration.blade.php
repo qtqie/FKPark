@@ -69,9 +69,12 @@
                     </div>
 
 
-                    <div data-mdb-input-init class="form-outline mb-4">
-                      <input type="text" id="user_type" class="form-control form-control-lg" name="user_type" />
-                      <label class="form-label">User Type</label>
+                    <div class="form-group">
+                      <label for="role">Role:</label>
+                      <select class="form-control" id="userRole" name="userRole" required>
+                        <option value="Administrator">Administrator</option>
+                        <option value="staff">staff</option>
+                      </select>
                     </div>
 
                     <div data-mdb-input-init class="form-outline mb-4">

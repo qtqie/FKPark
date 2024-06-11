@@ -1,9 +1,10 @@
+
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Main Page</title>
+<title>Vehicle Information</title>
 <style>
 * {
   box-sizing: border-box;
@@ -97,32 +98,33 @@ article {
   box-shadow: 0px 0px 15px rgba(0,0,0,0.2);
 }
 
-/* Form styling */
-form {
-  display: flex;
-  flex-direction: column;
+/* Table styling */
+table {
+  width: 100%;
+  border-collapse: collapse;
 }
 
-label {
-  margin-top: 10px;
-}
-
-input, select, button {
-  margin-top: 5px;
-  padding: 10px;
+table, th, td {
   border: 1px solid #ccc;
-  border-radius: 5px;
 }
 
-button {
+th, td {
+  padding: 10px;
+  text-align: left;
+}
+
+th {
   background-color: #3EA99F;
   color: white;
-  border: none;
-  cursor: pointer;
 }
 
-button:hover {
-  background-color: #808080;
+/* Change background color for specific header cells */
+th.date, th.start-time, th.end-time {
+  background-color: #3EA99F; /* Your desired color */
+}
+
+tr:nth-child(even) {
+  background-color: #f2f2f2;
 }
 
 /* Style the footer */
@@ -133,21 +135,18 @@ footer {
   color: white;
 }
 
-.profile-picture {
-    float: left;
-    margin-right: 20px;
-    border-radius: 50%;
-    overflow: hidden;
-    width: 100px;
-    height: 100px;
-  }
-
-  .profile-picture img {
-    width: 100%;
-    height: auto;
-  }
+/* Change background color for specific content cells */
+td.date, td.start-time, td.end-time {
+  background-color: white; /* Change to white color */
+}
 </style>
 </head>
+<script>
+function deleteRow(btn) {
+  var row = btn.parentNode.parentNode;
+  row.parentNode.removeChild(row);
+}
+</script>
 <body>
 
 <header>
@@ -169,8 +168,8 @@ footer {
     <li class="dropdown">
       <a href="ManageProfile" class="dropbtn">Profile</a>
       <div class="dropdown-content">
-        <a href="viewreg.php">Manage User Profile</a>
-        <a href="vehicleRegistration.blade.php">Manage Vehicle Information</a>
+        <a href="studentpage.blade.php">Manage User Profile</a>
+        <a href="vehicleRegistration.blade.php">Register Vehicle Information</a>
         <a href="userDashboard.blade.php">User Dashboard</a>
       </div>
     </li>
@@ -193,36 +192,51 @@ footer {
     </li>
   </ul>
 </header>
-<article>
-  <h2>Edit User Profile</h2>
-  
-  <div class="profile-picture">
-    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAOEAAADhCAMAAAAJbSJIAAAAPFBMVEXk5ueutLepsLPo6uursbXJzc/p6+zj5ea2u76orrKvtbi0ubzZ3N3O0dPAxcfg4uPMz9HU19i8wcPDx8qKXtGiAAAFTElEQVR4nO2d3XqzIAyAhUD916L3f6+f1m7tVvtNINFg8x5tZ32fQAIoMcsEQRAEQRAEQRAEQRAEQRAEQRAEQRAEQRAEQRAEQTghAJD1jWtnXJPP/54IgNzZQulSmxvTH6oYXX4WS+ivhTbqBa1r26cvCdCu6i0YXbdZ0o4A1rzV+5IcE3YE+z58T45lqo7g1Aa/JY5tgoqQF3qb382x7lNzBLcxft+O17QUYfQI4IIeklKsPSN4i6LKj/7Zm8n99RbHJpEw9gEBXNBpKIYLJqKYRwjOikf//r+J8ZsVuacbqCMNleI9TqGLGqMzhnVdBOdd6F/RlrFijiCoVMk320CBIahUxTWI0KKEcJqKbMdpdJb5QvdHq6wCI5qhKlgGMS/RBHkubWDAE+QZxB4xhCyDiDkLZxgGEVdQldzSKbTIhmZkFkSEPcVvmBn2SMuZB9od7fQDsMiDdKJjFUSCQarM5WirZ3C2TT/htYnyPcPfgrFHWz0BI74gr6J/IZiGUxAZGQLqmvQLTrtE/Go4YxhVRIpEw+sww1IIcqr5NKmUUzLF3d4/qPkYIp2T/obPuemlojFUR4t9Q2Vojhb7BmgElWHzLPH8hucfpefPNFTVgs9h1AdU/Pin96vwWbWdf+X9Absn3OdO34aMdsDnP8WgKYisTqI6CkNGqZQo1XA6Ef6AU32SJzOcBukHPF07/xNSgmHKa5BOhtezv6mA/rYJpwXNAnbRZ1XuF3BzDcO3vpA3+ny2909gbqE4hhD3LIPhLLyBNhPZvbZ3B+3tPYa18A7auSlXQayKwTPNLKDcuOB0xPYKDPFTkWsevQPRZ1J8Hji9I1KQ34r7hZhrwNwOZ97QxNx0drwn4QI0wQk1DcEsfKCWKdxVvxPSNUIp/knmAXT+nT+Ko3+0H96rcNb3m1fx7MBTJdeBJ7uFcWsc0wvgAsC4pROW0l2inbAmIBv/7GZmuhQH6API2rr8T0e6yuZJ+80A9LZeG62T3tik31XwxtwZcizKuTHkMjB1WdZde4Kmic/A5ZI3rr1ae21d08PlVHYfAaxw9G9CYRbJ+8ZdbTcMRV1XM3VdF0M32vtoTdZ0+u29s0OttJ5bz64UwinjaFMVY9vkqc3KKSxN21Xl+0L4Q3Vuv1tYl0pqnX6ms4XetFz7gdZVAgUEoJntfOUe4ZwsHd9FzqQ3Vv6xe41l0XJcqcKl6TZvlv7ClAW3BsqQW4X7ypApB8dmTgK4IX5wvqIVj33HtD2qSG4BqznxdIefL27Y4sahi0MdIdvUsDva8agGGbCtITmCY31MHD2O0uIdh/0rJDQ1VX5Zdxz3rR2QDbv6qXl9vudzqQtGm1Jv9LDXOsfvvB7VcZ8PDKD0mQ1VHPYQ9O+Yj4hR1IUD8rBnn3ho2m8oQMxbCFiKlL2ioSW5heeJqegED52CzxCtcGD3Kv8Wms9EYLyUhwaFIhSMBClevWEmiK/Iaogu4H7sg6ppQhQG8RUqivuTGOAJOg6FfgW0q0M0PQMRMEgXaeNf3SYDZ8PIMI0+wHgr/MgN7wYwpiLjCCqM6ydUDZLQiB6nDdNC8SDyig3jPPpFXGcC9O8BUBDVmgBY59E7Md/35Loe/UVEECEJwYggJjELZ4J71SaQSBeC02n4Da29CayJNA28SAhd2CQyC1Xw6pSmGSINQVuMhAZp4DClan9MgmkDDNmezqwS8sgtlXK/EPBhoaSmYVC/F7IO1jQEdHOlabpKh3+jzLQSTUiq4X2I+Ip/zU8rlaqAvkS21ElR+gqu3zbjjL+hIAiCIAiCIAiCIAiCsCf/AKrfVhSbvA+DAAAAAElFTkSuQmCC" alt="Profile Picture">
-  </div>
+<?php
 
-  <form action="edit_user_profile.php" method="post" enctype="multipart/form-data">
-    <label for="name">Name:</label>
-    <input type="text" id="name" name="name" value="<?php echo htmlspecialchars($user['name']); ?>" required>>
 
-    <label for="password">Password:</label>
-    <input type="text" id="password" name="password" value="******" required>
+require_once 'dbase.php';
+global $conn;
 
-    <label for="staff_id">Staff/Student Id:</label>
-    <input type="text" id="staff_id" name="staff_id" value="CB22663" required>
 
-    <label for="email">Email:</label>
-    <input type="email" id="email" name="email" value="aliAau@gmail.com" required>
+$select = 'SELECT  vehicle_id, vehicle_type, vehicle_plate FROM vehicle_info WHERE vehicle_id = ?';
+$stmt = mysqli_prepare($conn, $select);
+mysqli_stmt_bind_param($stmt, 'i', $vehicle_id);
+mysqli_stmt_execute($stmt);
+mysqli_stmt_bind_result(
+    $stmt,
+    $vehicle_id,
+    $vehicle_type,
+    $vehicle_plate
+);
 
-    <!-- Add a hidden input field to pass the user ID to the PHP script -->
-    <input type="hidden" id="user_id" name="user_id" value="123">
 
-    <button type="submit">Edit</button>
-  </form>
-</article>
+?>
 
-<footer>
-  <p>Copyright © 2024 Official Portal - UMPSA Universiti Malaysia Pahang Al-Sultan Abdullah (Malaysia University) - Public University in Pahang· All rights reserved</p>
-</footer>
+<h1 class="mb-4">Edit Vehicle</h1>
+<form action="updatevehicle.php?id=<?= $id ?>" method="post">
+    <div class="row mb-3">
+        <div class="col-2 col-form-label">
+            <label for="vehicle_type">Vehicle Type</label>
+        </div>
+        <div class="col">
+            <input type="text" class="form-control" value="<?= $vehicle_type ?>" id="vehicle_type" name="vehicle_type">
+        </div>
+    </div>
+    <div class="row mb-3">
+        <div class="col-2 col-form-label">
+            <label for="vehicle_plate" class="form-label">Vehicle Plate</label>
+        </div>
+        <div class="col">
+            <input type="text" id="vehicle_plate" name="vehicle_plate" value="<?= $vehicle_plate ?>" class="form-control">
+        </div>
+    </div>
+    <div class="row">
+        <div class="col d-flex gap-3">
+            <button class="btn btn-primary">Submit</button>
+        </div>
+    </div>
+</form>
 
-</body>
-</html>
+
+<?php

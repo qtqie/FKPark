@@ -184,7 +184,7 @@ footer {
 </header>
 
 <main>
-  <h2>Administrator Dashboard</h2>
+  <h2>User Dashboard</h2>
   
   <!-- Parking Statistics Section -->
   <div class="dashboard-section">

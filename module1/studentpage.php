@@ -1,10 +1,21 @@
+<?php
+session_start(); // Start the session if not already started
+
+// Assuming userID is stored in session after login
+if (!isset($_SESSION['user_id'])) {
+    // Redirect to login page if userID is not set
+    header('Location: login.php');
+    exit();
+}
+$user_id = $_SESSION['user_id'];
+?>
 
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Vehicle Information</title>
+<title>Main Page</title>
 <style>
 * {
   box-sizing: border-box;
@@ -98,33 +109,32 @@ article {
   box-shadow: 0px 0px 15px rgba(0,0,0,0.2);
 }
 
-/* Table styling */
-table {
-  width: 100%;
-  border-collapse: collapse;
+/* Form styling */
+form {
+  display: flex;
+  flex-direction: column;
 }
 
-table, th, td {
-  border: 1px solid #ccc;
+label {
+  margin-top: 10px;
 }
 
-th, td {
+input, select, button {
+  margin-top: 5px;
   padding: 10px;
-  text-align: left;
+  border: 1px solid #ccc;
+  border-radius: 5px;
 }
 
-th {
+button {
   background-color: #3EA99F;
   color: white;
+  border: none;
+  cursor: pointer;
 }
 
-/* Change background color for specific header cells */
-th.date, th.start-time, th.end-time {
-  background-color: #3EA99F; /* Your desired color */
-}
-
-tr:nth-child(even) {
-  background-color: #f2f2f2;
+button:hover {
+  background-color: #808080;
 }
 
 /* Style the footer */
@@ -135,18 +145,21 @@ footer {
   color: white;
 }
 
-/* Change background color for specific content cells */
-td.date, td.start-time, td.end-time {
-  background-color: white; /* Change to white color */
-}
+.profile-picture {
+    float: left;
+    margin-right: 20px;
+    border-radius: 50%;
+    overflow: hidden;
+    width: 100px;
+    height: 100px;
+  }
+
+  .profile-picture img {
+    width: 100%;
+    height: auto;
+  }
 </style>
 </head>
-<script>
-function deleteRow(btn) {
-  var row = btn.parentNode.parentNode;
-  row.parentNode.removeChild(row);
-}
-</script>
 <body>
 
 <header>
@@ -168,8 +181,8 @@ function deleteRow(btn) {
     <li class="dropdown">
       <a href="ManageProfile" class="dropbtn">Profile</a>
       <div class="dropdown-content">
-        <a href="studentpage.blade.php">Manage User Profile</a>
-        <a href="vehicleRegistration.blade.php">Register Vehicle Information</a>
+        <a href="viewreg.php">Manage User Profile</a>
+        <a href="vehicleRegistration.blade.php">Manage Vehicle Information</a>
         <a href="userDashboard.blade.php">User Dashboard</a>
       </div>
     </li>
@@ -193,41 +206,35 @@ function deleteRow(btn) {
   </ul>
 </header>
 <article>
-  <h2>View Information</h2>
-
-<table>
-    <thead>
-      <tr>
-        <th>Vehicle Id</th>
-        <th>Vehicle Type</th>
-        <th>Vehicle Plate</th>
-        <th>Action</th>
-      </tr>
-    </thead>
-    <tbody>
-    <?php
-      // Include the PHP file to connect to the database
-      include 'vehiclesubmit.php';
-
-      // Fetch data from the database
-      $vehicle_info = vehicle_info();
-
-      // Output data of each row
-      foreach ($vehicle_info as $info) {
-          echo "<tr>";
-          echo "<td>" . $info['vehicle_id'] . "</td>";
-          echo "<td>" . $info['vehicle_type'] . "</td>";
-          echo "<td>" . $info['vehicle_plate'] . "</td>";
-          echo "<td><a href='deletevehicle.php'><button>Delete</button></a><a href='editvehicle.php'><button>Edit</button></a></td>";
-          echo "</tr>";
-      }
-      ?>
-    </tbody>
-  </table>
-  <script>
-function confirmDelete() {
-  return confirm('Are you sure you want to delete this record?');
-}
-</script>
+  <h2>Edit User Profile</h2>
   
-  
+  <div class="profile-picture">
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAOEAAADhCAMAAAAJbSJIAAAAPFBMVEXk5ueutLepsLPo6uursbXJzc/p6+zj5ea2u76orrKvtbi0ubzZ3N3O0dPAxcfg4uPMz9HU19i8wcPDx8qKXtGiAAAFTElEQVR4nO2d3XqzIAyAhUD916L3f6+f1m7tVvtNINFg8x5tZ32fQAIoMcsEQRAEQRAEQRAEQRAEQRAEQRAEQRAEQRAEQRAEQTghAJD1jWtnXJPP/54IgNzZQulSmxvTH6oYXX4WS+ivhTbqBa1r26cvCdCu6i0YXbdZ0o4A1rzV+5IcE3YE+z58T45lqo7g1Aa/JY5tgoqQF3qb382x7lNzBLcxft+O17QUYfQI4IIeklKsPSN4i6LKj/7Zm8n99RbHJpEw9gEBXNBpKIYLJqKYRwjOikf//r+J8ZsVuacbqCMNleI9TqGLGqMzhnVdBOdd6F/RlrFijiCoVMk320CBIahUxTWI0KKEcJqKbMdpdJb5QvdHq6wCI5qhKlgGMS/RBHkubWDAE+QZxB4xhCyDiDkLZxgGEVdQldzSKbTIhmZkFkSEPcVvmBn2SMuZB9od7fQDsMiDdKJjFUSCQarM5WirZ3C2TT/htYnyPcPfgrFHWz0BI74gr6J/IZiGUxAZGQLqmvQLTrtE/Go4YxhVRIpEw+sww1IIcqr5NKmUUzLF3d4/qPkYIp2T/obPuemlojFUR4t9Q2Vojhb7BmgElWHzLPH8hucfpefPNFTVgs9h1AdU/Pin96vwWbWdf+X9Absn3OdO34aMdsDnP8WgKYisTqI6CkNGqZQo1XA6Ef6AU32SJzOcBukHPF07/xNSgmHKa5BOhtezv6mA/rYJpwXNAnbRZ1XuF3BzDcO3vpA3+ny2909gbqE4hhD3LIPhLLyBNhPZvbZ3B+3tPYa18A7auSlXQayKwTPNLKDcuOB0xPYKDPFTkWsevQPRZ1J8Hji9I1KQ34r7hZhrwNwOZ97QxNx0drwn4QI0wQk1DcEsfKCWKdxVvxPSNUIp/knmAXT+nT+Ko3+0H96rcNb3m1fx7MBTJdeBJ7uFcWsc0wvgAsC4pROW0l2inbAmIBv/7GZmuhQH6API2rr8T0e6yuZJ+80A9LZeG62T3tik31XwxtwZcizKuTHkMjB1WdZde4Kmic/A5ZI3rr1ae21d08PlVHYfAaxw9G9CYRbJ+8ZdbTcMRV1XM3VdF0M32vtoTdZ0+u29s0OttJ5bz64UwinjaFMVY9vkqc3KKSxN21Xl+0L4Q3Vuv1tYl0pqnX6ms4XetFz7gdZVAgUEoJntfOUe4ZwsHd9FzqQ3Vv6xe41l0XJcqcKl6TZvlv7ClAW3BsqQW4X7ypApB8dmTgK4IX5wvqIVj33HtD2qSG4BqznxdIefL27Y4sahi0MdIdvUsDva8agGGbCtITmCY31MHD2O0uIdh/0rJDQ1VX5Zdxz3rR2QDbv6qXl9vudzqQtGm1Jv9LDXOsfvvB7VcZ8PDKD0mQ1VHPYQ9O+Yj4hR1IUD8rBnn3ho2m8oQMxbCFiKlL2ioSW5heeJqegED52CzxCtcGD3Kv8Wms9EYLyUhwaFIhSMBClevWEmiK/Iaogu4H7sg6ppQhQG8RUqivuTGOAJOg6FfgW0q0M0PQMRMEgXaeNf3SYDZ8PIMI0+wHgr/MgN7wYwpiLjCCqM6ydUDZLQiB6nDdNC8SDyig3jPPpFXGcC9O8BUBDVmgBY59E7Md/35Loe/UVEECEJwYggJjELZ4J71SaQSBeC02n4Da29CayJNA28SAhd2CQyC1Xw6pSmGSINQVuMhAZp4DClan9MgmkDDNmezqwS8sgtlXK/EPBhoaSmYVC/F7IO1jQEdHOlabpKh3+jzLQSTUiq4X2I+Ip/zU8rlaqAvkS21ElR+gqu3zbjjL+hIAiCIAiCIAiCIAiCsCf/AKrfVhSbvA+DAAAAAElFTkSuQmCC" alt="Profile Picture">
+  </div>
+
+  <form action="edit_user_profile.php" method="post" enctype="multipart/form-data">
+    <label for="name">Name:</label>
+    <input type="text" id="name" name="name" value="<?php echo htmlspecialchars($user['name']); ?>" required>>
+
+    <label for="password">Password:</label>
+    <input type="text" id="password" name="password" value="******" required>
+
+    <label for="staff_id">Staff/Student Id:</label>
+    <input type="text" id="staff_id" name="staff_id" value="CB22663" required>
+
+    <label for="email">Email:</label>
+    <input type="email" id="email" name="email" value="aliAau@gmail.com" required>
+
+    <!-- Add a hidden input field to pass the user ID to the PHP script -->
+    <input type="hidden" id="user_id" name="user_id" value="123">
+
+    <button type="submit">Edit</button>
+  </form>
+</article>
+
+<footer>
+  <p>Copyright © 2024 Official Portal - UMPSA Universiti Malaysia Pahang Al-Sultan Abdullah (Malaysia University) - Public University in Pahang· All rights reserved</p>
+</footer>
+
+</body>
+</html>

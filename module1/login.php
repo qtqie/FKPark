@@ -1,3 +1,55 @@
+<?php
+session_start(); // Start the session
+include("dbase.php");
+
+function validateUser($conn, $userID, $userPassword, $user_role) {
+    // Sanitize and validate input data
+    $user_id = mysqli_real_escape_string($conn, $user_id);
+    $user_pw = mysqli_real_escape_string($conn, $user_pw);
+    $user_role = mysqli_real_escape_string($conn, $user_role);
+    
+
+    // Fetch userID from login based on username, password, and category
+    $query = "SELECT user_id FROM login WHERE user_id='$user_id' AND user_pw='$user_pw' AND userRole='$user_role'";
+    $result = mysqli_query($conn, $query);
+
+    if ($result && mysqli_num_rows($result) == 1) {
+        $row = mysqli_fetch_assoc($result);
+        return $row['user_id'];
+    } else {
+        return false;
+    }
+}
+
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['login'])) {
+    $userID = $_POST['user_id'];
+    $userPassword = $_POST['user_pw'];
+    $userRole = $_POST['user_role'];
+
+    // Validate user credentials
+    $userID = validateUser($conn, $user_id, $user_pw, $user_role);
+
+    if ($userID) {
+        $_SESSION['user_id'] = $user_id; // Store userID in session
+
+        // Redirect based on category
+        if ($userRole == "Administrator") {
+            header("Location: adminpage.php");
+            exit();
+        } elseif ($userRole == "staff") {
+            header("Location: staffpage.php");
+            exit();
+        } elseif ($userRole == "student") {
+            header("Location: studentpage.php");
+            exit();
+        } else {
+            echo "<div class='text-center text-danger'>Please select a valid category.</div>";
+        }
+    } else {
+        echo "<div class='text-center text-danger'>Invalid username, password, or category.</div>";
+    }
+}
+?>
 <!doctype html>
 <html lang="en">
 <head>
@@ -32,14 +84,24 @@
                     <h5 class="fw-normal mb-3 pb-3" style="letter-spacing: 1px;">Sign into your account</h5>
 
                     <div class="form-outline mb-4">
+                    <label class="form-label" for="user_id">User ID</label>
                       <input type="text" id="user_id" name="user_id" class="form-control form-control-lg" required />
-                      <label class="form-label" for="user_id">User ID</label>
                     </div>
 
                     <div class="form-outline mb-4">
+                    <label class="form-label" for="user_pw">Password</label>
                       <input type="password" id="user_pw" name="user_pw" class="form-control form-control-lg" required />
-                      <label class="form-label" for="user_pw">Password</label>
                     </div>
+
+                    <div class="form-outline mb-4">
+                    <label class="form-label" for="user_id">User Role</label>
+                <select class="form-select" name="userRole" aria-label="Default select example" required>
+                  <option value="" disabled selected>Select your category</option>
+                  <option value="Administrator">Administrator</option>
+                  <option value="student">Students</option>
+                  <option value="staff">Staff</option>
+                </select>
+              </div>
 
                     <div class="pt-1 mb-4">
                       <button class="btn btn-dark btn-lg btn-block" type="submit">Login</button>

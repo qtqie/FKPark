@@ -1,29 +1,37 @@
 <?php
-include("submitvehicle.php"); // Include only the database connection file
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+  $id = $_POST['vehicle_id'];
 
-// Check if 'vehicle_id' exists in the $_GET array and is not empty
-if (isset($_POST['vehicle_id'])) {
-    $vehicle_id = $_POST['vehicle_id'];
+  // Database connection
+  $conn = new mysqli($servername, $username, $password, $dbname);
 
-    // Prepare statement to prevent SQL injection
-    $query = "DELETE FROM vehicle_info WHERE vehicle_id = ?";
-    if ($stmt = mysqli_prepare($conn, $query)) {
-        mysqli_stmt_bind_param($stmt, "i", $vehicle_id);
-        if (mysqli_stmt_execute($stmt)) {
-            echo "success"; // Notify success
-        } else {
-            echo "Error deleting vehicle information: " . mysqli_stmt_error($stmt);
-        }
+  if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+  }
+
+  // SQL to delete a record
+  $sql = "DELETE FROM vehicle_info WHERE vehicle_id = ?";
+
+  if ($stmt = $conn->prepare($sql)) {
+    $stmt->bind_param("i", $vehicle_id);
+    if ($stmt->execute()) {
+      echo "Record deleted successfully";
     } else {
-        echo "Failed to prepare statement: " . mysqli_error($conn);
+      echo "Error deleting record: " . $stmt->error;
     }
+    $stmt->close();
+  } else {
+    echo "Error preparing statement: " . $conn->error;
+  }
 
-    // Close statement
-    mysqli_stmt_close($stmt);
+  $conn->close();
+
+  // Redirect back to the main page
+  header("Location: viewvehicle.php");
+  exit();
 } else {
-    echo "Succesfully";
+  // Redirect if accessed directly
+  header("Location: viewvehicle.php");
+  exit();
 }
-
-// Close connection
-mysqli_close($conn);
 ?>
