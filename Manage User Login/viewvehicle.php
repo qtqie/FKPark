@@ -1,3 +1,23 @@
+<?php
+// Database credentials
+$servername = "localhost";
+$username = "root"; // Default username for XAMPP/WAMP/MAMP is 'root'
+$password = ""; // Default password for XAMPP/WAMP/MAMP is empty
+$dbname = "fkpark_db"; // Just the database name, not the table name
+
+// Create connection
+$conn = new mysqli($servername, $username, $password, $dbname);
+
+// Check connection
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+}
+
+// Fetch bookings from the database
+$sql = "SELECT * FROM vehicle_info";
+$result = $conn->query($sql);
+?>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -140,12 +160,7 @@ td.date, td.start-time, td.end-time {
 }
 </style>
 </head>
-<script>
-function deleteRow(btn) {
-  var row = btn.parentNode.parentNode;
-  row.parentNode.removeChild(row);
-}
-</script>
+
 <body>
 
 <header>
@@ -194,37 +209,45 @@ function deleteRow(btn) {
 <article>
   <h2>View Information</h2>
 
-<table>
-    <thead>
-      <tr>
-        <th>Vehicle Id</th>
-        <th>Vehicle Type</th>
-        <th>Vehicle Plate</th>
-        <th>Action</th>
-      </tr>
-    </thead>
-    <tbody>
-    <?php
-      // Include the PHP file to connect to the database
-      include 'vehiclesubmit.php';
+  <?php
+if ($result->num_rows > 0) {
+    echo "<table style='width:100%; border-collapse: collapse;'>";
+    echo "<thead>";
+    echo "<tr style='background-color: #f2f2f2;'>";
+    echo "<th style='border: 1px solid #ddd; padding: 8px;'>Vehicle ID</th>";
+    echo "<th style='border: 1px solid #ddd; padding: 8px;'>Vehicle Type</th>";
+    echo "<th style='border: 1px solid #ddd; padding: 8px;'>Vehicle Plate</th>";
+    echo "<th style='border: 1px solid #ddd; padding: 8px;'>Actions</th>";
+    echo "</tr>";
+    echo "</thead>";
+    echo "<tbody>";
 
-      // Fetch data from the database
-      $vehicle_info = vehicle_info();
-
-      // Output data of each row
-      foreach ($vehicle_info as $info) {
-          echo "<tr>";
-          echo "<td>" . $info['vehicle_id'] . "</td>";
-          echo "<td>" . $info['vehicle_type'] . "</td>";
-          echo "<td>" . $info['vehicle_plate'] . "</td>";
-          echo "<td><a href='deletevehicle.php'><button>Delete</button></a><a href='editvehicle.php'><button>Edit</button></a></td>";
-          echo "</tr>";
-      }
-      ?>
-    </tbody>
-  </table>
-  <script>
-function confirmDelete() {
-  return confirm('Are you sure you want to delete this record?');
+    // Output data of each row
+    while($row = $result->fetch_assoc()) {
+        echo "<tr>";
+        echo "<td style='border: 1px solid #ddd; padding: 8px;'>" . htmlspecialchars($row["vehicle_id"]) . "</td>";
+        echo "<td style='border: 1px solid #ddd; padding: 8px;'>" . htmlspecialchars($row["vehicle_type"]) . "</td>";
+        echo "<td style='border: 1px solid #ddd; padding: 8px;'>" . htmlspecialchars($row["vehicle_plate"]) . "</td>";
+        echo "<td style='border: 1px solid #ddd; padding: 8px;'>";
+        echo "<a href='editvehicle.php?id=" . htmlspecialchars($row["id"]) . "' style='text-decoration: none; color: #007BFF;'>Edit</a> | ";
+        echo "<a href='deletevehicle.php?id=" . htmlspecialchars($row["id"]) . "' style='text-decoration: none; color: #FF0000;' onclick='return confirm(\"Are you sure you want to delete this vehicle?\")'>Delete</a>";
+        echo "</td>";
+        echo "</tr>";
+    }
+    echo "</tbody>";
+    echo "</table>";
+} else {
+    echo "<p>No vehicle found.</p>";
 }
-</script>
+
+$conn->close();
+?>
+
+<footer>
+  <p>Copyright © 2024 Official Portal - UMPSA Universiti Malaysia Pahang Al-Sultan Abdullah (Malaysia University) - Public University in Pahang. All rights reserved.</p>
+</footer>
+
+</body>
+
+</html>
+
