@@ -1,0 +1,15 @@
+CREATE TABLE parking (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    location VARCHAR(255) NOT NULL,
+    parking_area VARCHAR(255) NOT NULL,
+    parking_number VARCHAR(50) NOT NULL,
+    spaces INT NOT NULL,
+    parking_type ENUM('staff', 'students') NOT NULL
+);
+CREATE TABLE parking_spaces (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    parking_id INT NOT NULL,
+    space_id VARCHAR(10) NOT NULL,
+    status ENUM('/', 'X') NOT NULL,
+    FOREIGN KEY (parking_id) REFERENCES parking(id)
+);
