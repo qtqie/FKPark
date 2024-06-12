@@ -1,3 +1,16 @@
+<?php
+include 'parkingsubmit.php';
+
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    $parking_id = $_POST['parking_id'];
+    book_parking_spot($parking_id);
+    
+    // Redirect back to the main page or another confirmation page
+    header('Location: ParkingBooking.php');
+    exit();
+}
+?>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -92,28 +105,35 @@ article {
   margin: 20px auto;
   padding: 20px;
   width: 80%;
+  max-width: 800px;
   background-color: #f1f1f1;
   border-radius: 10px;
   box-shadow: 0px 0px 15px rgba(0,0,0,0.2);
 }
 
+/* Form styling */
 form {
   display: flex;
   flex-direction: column;
 }
 
 label {
-  margin: 10px 0 5px;
+  margin-top: 10px;
+  font-weight: bold;
 }
 
-input[type="text"], input[type="time"], input[type="date"] {
+input[type="text"],
+input[type="time"],
+input[type="date"],
+select {
   padding: 10px;
-  margin-bottom: 20px;
+  margin-top: 5px;
   border: 1px solid #ccc;
   border-radius: 5px;
 }
 
 button {
+  margin-top: 20px;
   padding: 10px;
   background-color: #3EA99F;
   color: white;
@@ -133,58 +153,74 @@ footer {
   text-align: center;
   color: white;
 }
+
+.qr-code {
+  margin: 20px 0;
+  text-align: center;
+}
+
+.qr-code img {
+  width: 200px;
+  height: 200px;
+}
 </style>
 </head>
 <body>
 
 <header>
   <div style="display: flex; align-items: center;">
-    <img src="Assets/UMPLogo.jpeg" alt="UMPLogo" style="width:75px;height:86px;">
+    <img src="../Assets/UMPLogo.jpeg" alt="UMPLogo" style="width:75px;height:86px;">
     <h2>FKPark</h2>
   </div>
   <ul>
-    <li><a class="active" href="#home">Home</a></li>
-
+    <li><a class="active" href="homepage.blade.php">Home</a></li>
     <li class="dropdown">
-      <a href="booking" class="dropbtn">Booking</a>
+      <a href="../Module3/AddBooking.php" class="dropbtn">Booking</a>
       <div class="dropdown-content">
-        <a href="AddBooking.php">Add Booking</a>
-        <a href="ViewBooking.php">View Booking</a>
+      <a href="../Module3/AddBooking.php">Add Booking</a>
+        <a href="../Module3/view_booking.php">View My Booking</a>
+        <a href="../Module3/ViewBooking.php">View Available Parking</a>
       </div>
     </li>
-
     <li><a href="#tsummon">Traffic Summon</a></li>
-
     <li><a href="#help">Help</a></li>
-
     <li class="dropdown">
       <a href="Parkingsetting" class="dropbtn">Parking Setting</a>
       <div class="dropdown-content">
-        <a href="#">Create Park</a>
-        <a href="#">Update Park</a>
-        <a href="#">Delete Park</a>
-        <a href="#">View Park</a>
+        <a href="createparkingspace.php">Create Park</a>
+        <a href="updateparking.php">Update Park</a>
+        <a href="deleteparking.php">Delete Park</a>
+        <a href="submitupdateparking.php">View Park</a>
       </div>
     </li>
-
     <li style="float:right" class="dropdown">
       <a href="profile" class="dropbtn">Profile</a>
       <div class="dropdown-content">
-        <a href="#">Sign Up</a>
-        <a href="#">Log In</a>
+        <a href="registration.blade.php">Sign Up</a>
+        <a href="LoginPage.php">Log In</a>
       </div>
     </li>
   </ul>
 </header>
 
+
 <article>
   <h2>Parking</h2>
-  <form action="ConfirmBookingPage.php" method="post">
+  <?php if (isset($error_message)) echo $error_message; ?>
+  <form action="../Module3/ConfirmBookingPage.php" method="post">
+
+  <label for="name">Name:</label>
+      <input type="text" id="name" name="name" value="ABC" required>
+      
+      <label for="id">ID number:</label>
+      <input type="text" id="id_number" name="id_number" value="CXXXXXX" required>
+
+
     <label for="car-plate">Car Plate Number:</label>
-    <input type="text" id="car-plate" name="car-plate" required>
+    <input type="text" id="car_plate" name="car-plate" required>
 
     <label for="start-time">Start Time:</label>
-    <input type="time" id="start-time" name="start-time" required>
+    <input type="time" id="start_time" name="start_time" required>
 
     <label for="date">Date:</label>
     <input type="date" id="date" name="date" required>
@@ -192,6 +228,8 @@ footer {
     <label for="duration">Expected Parking Duration (in hours):</label>
     <input type="text" id="duration" name="duration" required>
 
+
+    <input type="reset" value="Clear">
     <button type="submit">Confirm Parking</button>
   </form>
 </article>
