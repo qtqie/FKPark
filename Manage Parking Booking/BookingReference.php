@@ -1,9 +1,29 @@
+<?php
+// Database credentials
+$servername = "localhost";
+$username = "root"; // Default username for XAMPP/WAMP/MAMP is 'root'
+$password = ""; // Default password for XAMPP/WAMP/MAMP is empty
+$dbname = "fkpark_db"; // Just the database name, not the table name
+
+// Create connection
+$conn = new mysqli($servername, $username, $password, $dbname);
+
+// Check connection
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+}
+
+// Fetch bookings from the database
+$sql = "SELECT * FROM bookings";
+$result = $conn->query($sql);
+?>
+
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Checkout</title>
+<title>Booking Reference</title>
 <style>
 * {
   box-sizing: border-box;
@@ -87,16 +107,53 @@ li.dropdown {
   display: block;
 }
 
-/* Main content */
-article {
+/* Container styles */
+.container {
+  width: 80%;
   margin: 20px auto;
   padding: 20px;
-  width: 80%;
-  background-color: #f1f1f1;
+  background-color: #fff;
   border-radius: 10px;
-  box-shadow: 0px 0px 15px rgba(0,0,0,0.2);
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+h2 {
+  color: #3EA99F;
+}
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 20px;
+}
+table, th, td {
+  border: 1px solid #ddd;
+}
+th, td {
+  padding: 10px;
+  text-align: left;
+}
+th {
+  background-color: #f2f2f2;
+}
+.back-button {
+  display: inline-block;
+  padding: 10px 20px;
+  background-color: #3EA99F;
+  color: #fff;
+  text-decoration: none;
+  border-radius: 5px;
+  text-align: center;
+}
+.back-button:hover {
+  background-color: #2d8f7c;
 }
 
+/* Footer styles */
+footer {
+  background-color: #777;
+  padding: 10px;
+  text-align: center;
+  color: white;
+}
 /* Style the footer */
 footer {
   background-color: #777;
@@ -105,15 +162,6 @@ footer {
   color: white;
 }
 
-.qr-code {
-  margin: 20px 0;
-  text-align: center;
-}
-
-.qr-code img {
-  width: 200px;
-  height: 200px;
-}
 </style>
 </head>
 <body>
@@ -125,20 +173,16 @@ footer {
   </div>
   <ul>
     <li><a class="active" href="homepage.blade.php">Home</a></li>
-
     <li class="dropdown">
-      <a href="../Module3/AddBooking.php" class="dropbtn">Booking</a>
+      <a href="booking" class="dropbtn">Booking</a>
       <div class="dropdown-content">
-      <a href="../Module3/AddBooking.php">Add Booking</a>
-        <a href="../Module3/view_booking.php">View My Booking</a>
-        <a href="../Module3/ViewBooking.php">View Available Parking</a>
+      <a href="AddBooking.php">Add Booking</a>
+        <a href="view_booking.php">View My Booking</a>
+        <a href="ViewBooking.php">View Available Parking</a>
       </div>
     </li>
-
     <li><a href="#tsummon">Traffic Summon</a></li>
-
     <li><a href="#help">Help</a></li>
-
     <li class="dropdown">
       <a href="Parkingsetting" class="dropbtn">Parking Setting</a>
       <div class="dropdown-content">
@@ -148,7 +192,6 @@ footer {
         <a href="#">View Park</a>
       </div>
     </li>
-
     <li style="float:right" class="dropdown">
       <a href="profile" class="dropbtn">Profile</a>
       <div class="dropdown-content">
@@ -159,11 +202,9 @@ footer {
   </ul>
 </header>
 
-<article>
-  <h2>Checkout Booking</h2>
-
-  <div>
-    <p>Review your booking details and proceed to complete the booking:</p>
+<div class="container">
+    <h2>Booking Reference Details</h2>
+    <p>Here are your booking details:</p>
     <table>
     <tr>
         <td><strong>Name:</strong></td>
@@ -194,26 +235,13 @@ footer {
         <td><?php echo htmlspecialchars($_POST['duration']); ?></td>
       </tr>
     </table>
-  </div>
 
- <div class="qr-code">
-    <p>Scan this QR code for booking reference:</p>
-    <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=https%3A%2F%2Fexample.com%2FBookingReference.php%3Freference%3D123456789" alt="QR Code">
+    
+    <a href="homepage.blade.php" class="back-button">Back to Home</a>
 </div>
 
-
-  <button onclick="completeBooking()">Complete Booking</button>
-
-  <script>
-  function completeBooking() {
-    // Redirect to a page that handles the booking completion
-    window.location.href = "BookingSuccessful.php";
-  }
-  </script>
-</article>
-
 <footer>
-  <p>Copyright © 2024 Official Portal - UMPSA Universiti Malaysia Pahang Al-Sultan Abdullah (Malaysia University) - Public University in Pahang· All rights reserved</p>
+    <p>Copyright © 2024 Official Portal - UMPSA Universiti Malaysia Pahang Al-Sultan Abdullah (Malaysia University) - Public University in Pahang· All rights reserved</p>
 </footer>
 
 </body>

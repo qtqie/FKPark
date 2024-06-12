@@ -126,18 +126,18 @@ footer {
 
 <header>
   <div style="display: flex; align-items: center;">
-    <img src="Assets/UMPLogo.jpeg" alt="UMPLogo" style="width:75px;height:86px;">
+    <img src="../Assets/UMPLogo.jpeg" alt="UMPLogo" style="width:75px;height:86px;">
     <h2>FKPark Admin Dashboard</h2>
   </div>
   <ul>
-    <li><a class="active" href="#home">Home</a></li>
+    <li><a class="active" href="homepage.blade.php">Home</a></li>
     <li><a href="#reports">Reports</a></li>
     <li><a href="#settings">Settings</a></li>
     <li style="float:right" class="dropdown">
       <a href="profile" class="dropbtn">Profile</a>
       <div class="dropdown-content">
-        <a href="#">Sign Up</a>
-        <a href="#">Log In</a>
+        <a href="registration.blade.php">Sign Up</a>
+        <a href="LoginPage.php">Log In</a>
       </div>
     </li>
   </ul>
@@ -161,45 +161,71 @@ footer {
       <canvas id="bookingTrendsChart"></canvas>
     </div>
   </div>
-  
-  <!-- User Activity Section -->
-  <div class="dashboard-section">
-    <h3>User Activity</h3>
-    <div class="chart-container">
-      <canvas id="userActivityChart"></canvas>
-    </div>
-  </div>
-  
-  <!-- Traffic Summon Reports Section -->
-  <div class="dashboard-section">
-    <h3>Traffic Summon Reports</h3>
-    <div class="chart-container">
-      <canvas id="trafficSummonReportsChart"></canvas>
-    </div>
-  </div>
 </main>
 
 <footer>
   <p>Copyright © 2024 Official Portal - UMPSA Universiti Malaysia Pahang Al-Sultan Abdullah (Malaysia University) - Public University in Pahang· All rights reserved</p>
 </footer>
 
-<!-- JavaScript for Charts -->
+<?php
+// Fetch bookings from the database
+$servername = "localhost";
+$username = "root";
+$password = "";
+$dbname = "fkpark_db";
+
+// Create connection
+$conn = new mysqli($servername, $username, $password, $dbname);
+
+// Check connection
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+}
+
+// Fetch parking area data
+$sql = "SELECT parking_area, COUNT(*) as count FROM bookings GROUP BY parking_area";
+$result = $conn->query($sql);
+
+$parkingData = [];
+if ($result->num_rows > 0) {
+    while($row = $result->fetch_assoc()) {
+        $parkingData[] = $row;
+    }
+}
+
+// Fetch booking trends data
+$sql = "SELECT DATE_FORMAT(date, '%Y-%m') as month, COUNT(*) as count FROM bookings GROUP BY month";
+$result = $conn->query($sql);
+
+$bookingTrendsData = [];
+if ($result->num_rows > 0) {
+    while($row = $result->fetch_assoc()) {
+        $bookingTrendsData[] = $row;
+    }
+}
+
+$conn->close();
+?>
+
 <script>
-// Example chart data and configuration
+// Convert PHP data to JavaScript
+const parkingData = <?php echo json_encode($parkingData); ?>;
+const bookingTrendsData = <?php echo json_encode($bookingTrendsData); ?>;
+
+// Prepare data for the parking statistics chart
+const parkingLabels = parkingData.map(data => data.parking_area);
+const parkingCounts = parkingData.map(data => data.count);
+
 const ctxParking = document.getElementById('parkingStatisticsChart').getContext('2d');
 const parkingStatisticsChart = new Chart(ctxParking, {
     type: 'bar',
     data: {
-        labels: ['A1', 'A2', 'B1', 'B2', 'C1', 'C2'],
+        labels: parkingLabels,
         datasets: [{
             label: '# of Parked Cars',
-            data: [12, 19, 3, 5, 2, 3],
-            backgroundColor: [
-                'rgba(75, 192, 192, 0.2)'
-            ],
-            borderColor: [
-                'rgba(75, 192, 192, 1)'
-            ],
+            data: parkingCounts,
+            backgroundColor: 'rgba(75, 192, 192, 0.2)',
+            borderColor: 'rgba(75, 192, 192, 1)',
             borderWidth: 1
         }]
     },
@@ -211,21 +237,21 @@ const parkingStatisticsChart = new Chart(ctxParking, {
         }
     }
 });
+
+// Prepare data for the booking trends chart
+const bookingLabels = bookingTrendsData.map(data => data.month);
+const bookingCounts = bookingTrendsData.map(data => data.count);
 
 const ctxBooking = document.getElementById('bookingTrendsChart').getContext('2d');
 const bookingTrendsChart = new Chart(ctxBooking, {
     type: 'line',
     data: {
-        labels: ['January', 'February', 'March', 'April', 'May', 'June'],
+        labels: bookingLabels,
         datasets: [{
             label: 'Bookings',
-            data: [65, 59, 80, 81, 56, 55],
-            backgroundColor: [
-                'rgba(153, 102, 255, 0.2)'
-            ],
-            borderColor: [
-                'rgba(153, 102, 255, 1)'
-            ],
+            data: bookingCounts,
+            backgroundColor: 'rgba(153, 102, 255, 0.2)',
+            borderColor: 'rgba(153, 102, 255, 1)',
             borderWidth: 1
         }]
     },
@@ -233,72 +259,6 @@ const bookingTrendsChart = new Chart(ctxBooking, {
         scales: {
             y: {
                 beginAtZero: true
-            }
-        }
-    }
-});
-
-const ctxUserActivity = document.getElementById('userActivityChart').getContext('2d');
-const userActivityChart = new Chart(ctxUserActivity, {
-    type: 'pie',
-    data: {
-        labels: ['Active', 'Inactive'],
-        datasets: [{
-            label: '# of Users',
-            data: [300, 50],
-            backgroundColor: [
-                'rgba(255, 206, 86, 0.2)',
-                'rgba(255, 99, 132, 0.2)'
-            ],
-            borderColor: [
-                'rgba(255, 206, 86, 1)',
-                'rgba(255, 99, 132, 1)'
-            ],
-            borderWidth: 1
-        }]
-    },
-    options: {
-        responsive: true,
-        plugins: {
-            legend: {
-                position: 'top',
-            },
-            title: {
-                display: true,
-                text: 'User Activity'
-            }
-        }
-    }
-});
-
-const ctxTrafficSummon = document.getElementById('trafficSummonReportsChart').getContext('2d');
-const trafficSummonReportsChart = new Chart(ctxTrafficSummon, {
-    type: 'doughnut',
-    data: {
-        labels: ['Paid', 'Unpaid'],
-        datasets: [{
-            label: '# of Summons',
-            data: [60, 40],
-            backgroundColor: [
-                'rgba(54, 162, 235, 0.2)',
-                'rgba(255, 159, 64, 0.2)'
-            ],
-            borderColor: [
-                'rgba(54, 162, 235, 1)',
-                'rgba(255, 159, 64, 1)'
-            ],
-            borderWidth: 1
-        }]
-    },
-    options: {
-        responsive: true,
-        plugins: {
-            legend: {
-                position: 'top',
-            },
-            title: {
-                display: true,
-                text: 'Traffic Summon Reports'
             }
         }
     }

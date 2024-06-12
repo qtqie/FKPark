@@ -110,6 +110,30 @@ article {
   color: #333;
 }
 
+/* Button styling */
+.button {
+  display: inline-block;
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+  text-align: center;
+  text-decoration: none;
+  outline: none;
+  color: #fff;
+  background-color: #3EA99F;
+  border: none;
+  border-radius: 10px;
+  box-shadow: 0 4px #999;
+}
+
+.button:hover {background-color: #3e8e41}
+
+.button:active {
+  background-color: #3e8e41;
+  box-shadow: 0 2px #666;
+  transform: translateY(2px);
+}
+
 /* Style the footer */
 footer {
   background-color: #777;
@@ -123,17 +147,18 @@ footer {
 
 <header>
   <div style="display: flex; align-items: center;">
-    <img src="Assets/UMPLogo.jpeg" alt="UMPLogo" style="width:75px;height:86px;">
+    <img src="../Assets/UMPLogo.jpeg" alt="UMPLogo" style="width:75px;height:86px;">
     <h2>FKPark</h2>
   </div>
   <ul>
-    <li><a class="active" href="#home">Home</a></li>
+    <li><a class="active" href="homepage.blade.php">Home</a></li>
 
     <li class="dropdown">
-      <a href="booking" class="dropbtn">Booking</a>
+      <a href="../Module3/AddBooking.php" class="dropbtn">Booking</a>
       <div class="dropdown-content">
-        <a href="AddBooking.php">Add Booking</a>
-        <a href="ViewBooking.php">View Booking</a>
+      <a href="../Module3/AddBooking.php">Add Booking</a>
+        <a href="../Module3/view_booking.php">View My Booking</a>
+        <a href="../Module3/ViewBooking.php">View Available Parking</a>
       </div>
     </li>
 
@@ -144,18 +169,18 @@ footer {
     <li class="dropdown">
       <a href="Parkingsetting" class="dropbtn">Parking Setting</a>
       <div class="dropdown-content">
-        <a href="#">Create Park</a>
-        <a href="#">Update Park</a>
-        <a href="#">Delete Park</a>
-        <a href="#">View Park</a>
+        <a href="createparkingspace.php">Create Park</a>
+        <a href="updateparking.php">Update Park</a>
+        <a href="deleteparking.php">Delete Park</a>
+        <a href="submitupdateparking.php">View Park</a>
       </div>
     </li>
 
     <li style="float:right" class="dropdown">
       <a href="profile" class="dropbtn">Profile</a>
       <div class="dropdown-content">
-        <a href="#">Sign Up</a>
-        <a href="#">Log In</a>
+        <a href="registration.blade.php">Sign Up</a>
+        <a href="LoginPage.php">Log In</a>
       </div>
     </li>
   </ul>
@@ -168,6 +193,7 @@ footer {
   <div class="success-details">
     <p>Your booking has been successfully completed.</p>
     <p>Thank you for using FKPark.</p>
+    <a href="../Module3/view_booking.php" class="button">View My Booking</a>
   </div>
 </article>
 

@@ -1,11 +1,16 @@
+<?php
+include '../Module3/parkingsubmit.php';
+$spots = parking_spots();
+?>
+
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>View Parking</title>
+<title>View Available Parking</title>
 <style>
-* {
+ {
   box-sizing: border-box;
 }
 body {
@@ -144,34 +149,30 @@ td.date, td.start-time, td.end-time {
 
 <header>
   <div style="display: flex; align-items: center;">
-    <img src="Assets/UMPLogo.jpeg" alt="UMPLogo" style="width:75px;height:86px;">
+    <img src="../Assets/UMPLogo.jpeg" alt="UMPLogo" style="width:75px;height:86px;">
     <h2>FKPark</h2>
   </div>
   <ul>
     <li><a class="active" href="#home">Home</a></li>
-
     <li class="dropdown">
       <a href="booking" class="dropbtn">Booking</a>
       <div class="dropdown-content">
-        <a href="Addbooking.php">Add Booking</a>
-        <a href="ViewBooking.php">View Booking</a>
+      <a href="../Module3/AddBooking.php">Add Booking</a>
+        <a href="../Module3/view_booking.php">View My Booking</a>
+        <a href="../Module3/ViewBooking.php">View Available Parking</a>
       </div>
     </li>
-
     <li><a href="#tsummon">Traffic Summon</a></li>
-
     <li><a href="#help">Help</a></li>
-
     <li class="dropdown">
       <a href="Parkingsetting" class="dropbtn">Parking Setting</a>
       <div class="dropdown-content">
-        <a href="#">Create Park</a>
-        <a href="#">Update Park</a>
-        <a href="#">Delete Park</a>
-        <a href="#">View Park</a>
+        <a href="createparkingspace.php">Create Park</a>
+        <a href="updateparking.php">Update Park</a>
+        <a href="deleteparking.php">Delete Park</a>
+        <a href="submitupdateparking.php">View Park</a>
       </div>
     </li>
-
     <li style="float:right" class="dropdown">
       <a href="profile" class="dropbtn">Profile</a>
       <div class="dropdown-content">
@@ -183,53 +184,48 @@ td.date, td.start-time, td.end-time {
 </header>
 
 <article>
-  <h2>View Parking</h2>
-  <form method="post">
-    <label for="status">Filter by Status:</label>
-    <select name="Status" id="Status">
-        <option value="all">All Parking</option>
-        <option value="Available">Available Parking</option>
-    </select>
-    <button type="submit">Filter</button>
-</form>
-
-  </form>
-  <table>
-    <thead>
-      <tr>
-        <th>Parking ID</th>
-        <th>Area</th>
-        <th>Spot Number</th>
-        <th>Status</th>
-        <th>Actions</th>
-      </tr>
-    </thead>
-    <tbody>
-    <?php
-      // Include the PHP file to connect to the database
-      include 'parkingsubmit.php';
-
-      // Fetch data from the database
-      $parkingspots = parking_spots();
-
-      // Output data of each row
-      foreach ($parkingspots as $spot) {
-          echo "<tr>";
-          echo "<td>" . $spot['parking_id'] . "</td>";
-          echo "<td>" . $spot['area'] . "</td>";
-          echo "<td>" . $spot['spot_number'] . "</td>";
-          echo "<td>" . $spot['status'] . "</td>";
-          echo "<td><a href='ParkingBooking.php'><button>Book</button></a></td>";
-          echo "</tr>";
-      }
-      ?>
-    </tbody>
-  </table>
+    <h2>View Available Parking</h2>
+    <form method="post">
+        <label for="status">Filter by Status:</label>
+        <select name="Status" id="Status">
+            <option value="all">All Parking</option>
+            <option value="Available">Available Parking</option>
+        </select>
+        <button type="submit">Filter</button>
+    </form>
+    <table>
+        <thead>
+            <tr>
+                <th>Parking Area</th>
+                <th>Status</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        <?php
+        $parkingspots = parking_spots();
+        foreach ($parkingspots as $spot) {
+            echo "<tr>";
+            echo "<td>" . htmlspecialchars($spot['parking_area']) . "</td>";
+            echo "<td>" . htmlspecialchars($spot['status']) . "</td>";
+            echo "<td>";
+            if ($spot['status'] != 'occupied') {
+                echo "<form method='post' action='ParkingBooking.php'>";
+                echo "<input type='hidden' name='parking_id' value='" . $spot['parking_id'] . "'>";
+                echo "<button type='submit'>Book</button>" ;
+                echo "</form>";
+            } else {
+                echo "Occupied";
+            }
+            echo "</td>";
+            echo "</tr>";
+        }
+        ?>
+        </tbody>
+    </table>
 </article>
-
-<footer>
-  <p>Copyright © 2024 Official Portal - UMPSA Universiti Malaysia Pahang Al-Sultan Abdullah (Malaysia University) - Public University in Pahang· All rights reserved</p>
-</footer>
-
+    <footer>
+        <p>Copyright © 2024 Official Portal - UMPSA Universiti Malaysia Pahang Al-Sultan Abdullah (Malaysia University) - Public University in Pahang· All rights reserved</p>
+    </footer>
 </body>
 </html>
