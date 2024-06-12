@@ -120,17 +120,18 @@ footer {
 
 <header>
   <div style="display: flex; align-items: center;">
-    <img src="Assets/UMPLogo.jpeg" alt="UMPLogo" style="width:75px;height:86px;">
+    <img src="../Assets/UMPLogo.jpeg" alt="UMPLogo" style="width:75px;height:86px;">
     <h2>FKPark</h2>
   </div>
   <ul>
-    <li><a class="active" href="#home">Home</a></li>
+    <li><a class="active" href="homepage.blade.php">Home</a></li>
 
     <li class="dropdown">
-      <a href="booking" class="dropbtn">Booking</a>
+      <a href="../Module3/AddBooking.php" class="dropbtn">Booking</a>
       <div class="dropdown-content">
-        <a href="AddBooking.php">Add Booking</a>
-        <a href="ViewBooking.php">View Booking</a>
+      <a href="../Module3/AddBooking.php">Add Booking</a>
+        <a href="../Module3/view_booking.php">View My Booking</a>
+        <a href="../Module3/ViewBooking.php">View Available Parking</a>
       </div>
     </li>
 
@@ -151,58 +152,55 @@ footer {
     <li style="float:right" class="dropdown">
       <a href="profile" class="dropbtn">Profile</a>
       <div class="dropdown-content">
-        <a href="#">Sign Up</a>
-        <a href="#">Log In</a>
+        <a href="registration.blade.php">Sign Up</a>
+        <a href="LoginPage.php">Log In</a>
       </div>
     </li>
   </ul>
 </header>
 
 <article>
-  <h2>Checkout</h2>
+  <h2>Checkout Booking</h2>
 
   <div>
     <p>Review your booking details and proceed to complete the booking:</p>
     <table>
-      <tr>
-        <td><strong>Parking ID:</strong></td>
-        <td>1</td>
+    <tr>
+        <td><strong>Name:</strong></td>
+        <td><?php echo htmlspecialchars($_POST['name']); ?></td>
+      </tr>
+    <tr>
+        <td><strong>ID Number:</strong></td>
+        <td><?php echo htmlspecialchars($_POST['id_number']); ?></td>
       </tr>
       <tr>
-        <td><strong>Area:</strong></td>
-        <td>A1</td>
+        <td><strong>Parking Area:</strong></td>
+        <td><?php echo htmlspecialchars($_POST['parking_area']); ?></td>
       </tr>
       <tr>
-        <td><strong>Spot Number:</strong></td>
-        <td>01</td>
-      </tr>
-      <tr>
-        <td><strong>Vehicle Registration Number:</strong></td>
-        <td>FB5989</td>
+        <td><strong>Car Plate Number:</strong></td>
+        <td><?php echo htmlspecialchars($_POST['car-plate']); ?></td>
       </tr>
       <tr>
         <td><strong>Date:</strong></td>
-        <td>15/5/2024</td>
+        <td><?php echo htmlspecialchars($_POST['date']); ?></td>
       </tr>
       <tr>
         <td><strong>Start Time:</strong></td>
-        <td>9.00 AM</td>
+        <td><?php echo htmlspecialchars($_POST['start-time']); ?></td>
       </tr>
       <tr>
-        <td><strong>End Time:</strong></td>
-        <td>5.00 PM</td>
-      </tr>
-      <tr>
-        <td><strong>Status:</strong></td>
-        <td>Available</td>
+        <td><strong>Expected Parking Duration (in hours):</strong></td>
+        <td><?php echo htmlspecialchars($_POST['duration']); ?></td>
       </tr>
     </table>
   </div>
 
-  <div class="qr-code">
+ <div class="qr-code">
     <p>Scan this QR code for booking reference:</p>
-    <img src="Assets/qrcode.png" alt="QR Code">
-  </div>
+    <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=https%3A%2F%2Fexample.com%2FBookingReference.php%3Freference%3D123456789" alt="QR Code">
+</div>
+
 
   <button onclick="completeBooking()">Complete Booking</button>
 
@@ -220,4 +218,3 @@ footer {
 
 </body>
 </html>
-
