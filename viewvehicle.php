@@ -1,3 +1,21 @@
+<?php
+session_start();
+include("dbase.php");
+
+// Enable error reporting for debugging
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+
+
+// Fetch vehicle data from the database
+$query = "SELECT * FROM vehicle_info";
+$result = mysqli_query($conn, $query);
+
+// Check if the query was successful
+if (!$result) {
+    die("Database query failed: " . mysqli_error($conn));
+}
+?>
 
 <!DOCTYPE html>
 <html>
@@ -192,51 +210,45 @@ function deleteRow(btn) {
     </li>
   </ul>
 </header>
-<?php
+<article>
+  <h2>View Information</h2>
 
+<table>
+    <thead>
+      <tr>
+        <th>Vehicle Id</th>
+        <th>Vehicle Type</th>
+        <th>Vehicle Plate</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody>
+  
+    <?php
+    if (mysqli_num_rows($result) > 0) {
+        // Output data of each row
+        while ($info = mysqli_fetch_assoc($result)) {
+            echo "<tr>";
+            echo "<td>" . $info['vehicle_id'] . "</td>";
+            echo "<td>" . $info['vehicle_type'] . "</td>";
+            echo "<td>" . $info['vehicle_plate'] . "</td>";
+            echo "<td>
+                    <a href='editvehicle.php?vehicle_id=" . $info['vehicle_id'] . "'>Edit Vehicle</a>
+        
+                    <form action='deletevehicle.php' method='post'>
+                        <input type='hidden' name='vehicle_id' value='" . $info['vehicle_id'] . "'>
+                        <input type='submit' value='Delete'>
+                    </form>
+                </td>";
+            echo "</tr>";
+        }
+    } else {
+        echo "<tr><td colspan='4'>No vehicles found</td></tr>";
+    }
+    ?>
+</tbody>
 
-require_once 'dbase.php';
-global $conn;
-
-
-$select = 'SELECT  vehicle_id, vehicle_type, vehicle_plate FROM vehicle_info WHERE vehicle_id = ?';
-$stmt = mysqli_prepare($conn, $select);
-mysqli_stmt_bind_param($stmt, 'i', $vehicle_id);
-mysqli_stmt_execute($stmt);
-mysqli_stmt_bind_result(
-    $stmt,
-    $vehicle_id,
-    $vehicle_type,
-    $vehicle_plate
-);
-
-
-?>
-
-<h1 class="mb-4">Edit Vehicle</h1>
-<form action="updatevehicle.php?id=<?= $id ?>" method="post">
-    <div class="row mb-3">
-        <div class="col-2 col-form-label">
-            <label for="vehicle_type">Vehicle Type</label>
-        </div>
-        <div class="col">
-            <input type="text" class="form-control" value="<?= $vehicle_type ?>" id="vehicle_type" name="vehicle_type">
-        </div>
-    </div>
-    <div class="row mb-3">
-        <div class="col-2 col-form-label">
-            <label for="vehicle_plate" class="form-label">Vehicle Plate</label>
-        </div>
-        <div class="col">
-            <input type="text" id="vehicle_plate" name="vehicle_plate" value="<?= $vehicle_plate ?>" class="form-control">
-        </div>
-    </div>
-    <div class="row">
-        <div class="col d-flex gap-3">
-            <button class="btn btn-primary">Submit</button>
-        </div>
-    </div>
-</form>
-
-
-<?php
+    </tbody>
+  </table>
+  </body>
+</html>

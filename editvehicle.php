@@ -1,9 +1,41 @@
+<?php
+include("dbase.php");
+
+// Check if vehicle ID is provided and valid
+if(isset($_GET['vehicle_id'])) {
+    $vehicle_id = $_GET['vehicle_id'];
+    
+    // Fetch vehicle details from the database
+    $query = "SELECT vehicle_type, vehicle_plate FROM vehicle_info WHERE vehicle_id = ?";
+    $stmt = mysqli_prepare($conn, $query);
+    
+    // Check if prepare() succeeded
+    if($stmt) {
+        mysqli_stmt_bind_param($stmt, "i", $vehicle_id);
+        mysqli_stmt_execute($stmt);
+        mysqli_stmt_bind_result($stmt, $vehicle_type, $vehicle_plate);
+        mysqli_stmt_fetch($stmt);
+        
+        // Close the statement
+        mysqli_stmt_close($stmt);
+    } else {
+        // Handle prepare error
+        exit('Prepare failed: ' . mysqli_error($conn));
+    }
+} else {
+    // Handle the case where vehicle ID is not provided or invalid
+    // You might redirect the user to an error page or display a message
+    exit('Invalid vehicle ID');
+}
+?>
+
+
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Vehicle Registration</title>
+<title>Vehicle Information</title>
 <style>
 * {
   box-sizing: border-box;
@@ -97,32 +129,33 @@ article {
   box-shadow: 0px 0px 15px rgba(0,0,0,0.2);
 }
 
-/* Form styling */
-form {
-  display: flex;
-  flex-direction: column;
+/* Table styling */
+table {
+  width: 100%;
+  border-collapse: collapse;
 }
 
-label {
-  margin-top: 10px;
-}
-
-input, select, button {
-  margin-top: 5px;
-  padding: 10px;
+table, th, td {
   border: 1px solid #ccc;
-  border-radius: 5px;
 }
 
-button {
+th, td {
+  padding: 10px;
+  text-align: left;
+}
+
+th {
   background-color: #3EA99F;
   color: white;
-  border: none;
-  cursor: pointer;
 }
 
-button:hover {
-  background-color: #808080;
+/* Change background color for specific header cells */
+th.date, th.start-time, th.end-time {
+  background-color: #3EA99F; /* Your desired color */
+}
+
+tr:nth-child(even) {
+  background-color: #f2f2f2;
 }
 
 /* Style the footer */
@@ -132,8 +165,19 @@ footer {
   text-align: center;
   color: white;
 }
+
+/* Change background color for specific content cells */
+td.date, td.start-time, td.end-time {
+  background-color: white; /* Change to white color */
+}
 </style>
 </head>
+<script>
+function deleteRow(btn) {
+  var row = btn.parentNode.parentNode;
+  row.parentNode.removeChild(row);
+}
+</script>
 <body>
 
 <header>
@@ -156,7 +200,7 @@ footer {
       <a href="ManageProfile" class="dropbtn">Profile</a>
       <div class="dropdown-content">
         <a href="studentpage.blade.php">Manage User Profile</a>
-        <a href="vehicleRegistration.blade.php">Manage Vehicle Information</a>
+        <a href="vehicleRegistration.blade.php">Register Vehicle Information</a>
         <a href="userDashboard.blade.php">User Dashboard</a>
       </div>
     </li>
@@ -180,70 +224,28 @@ footer {
   </ul>
 </header>
 
-<article>
-  <h2>Vehicle Registration</h2>
-  <form action="submitvehicle.php" method="post" enctype="multipart/form-data">
-    <label for="vehicle_id">Vehicle ID:</label>
-    <input type="text" id="vehicle_id" name="vehicle_id" required>
-
-    <label for="vehicle_type">Vehicle Type:</label>
-    <input type="text" id="vehicle_type" name="vehicle_type" required>
-
-    <label for="vehicle_plate">Vehicle Number Plate:</label>
-    <input type="text" id="vehicle_plate" name="vehicle_plate" required>
-
-    <label for="grant">Upload Vehicle Grant:</label>
-    <input type="file" id="grant" name="grant" accept=".pdf,.jpg,.jpeg,.png" required>
-
-    <button type="submit">Register Vehicle</button>
-  </form>
-
-  <?php
-
-
-    $target_dir = "uploads/";
-    $target_file = $target_dir . basename($_FILES["fileToUpload"]["name"]);
-    $uploadOk = 1;
-    $imageFileType = strtolower(pathinfo($target_file,PATHINFO_EXTENSION));
-
-      // Check if file already exists
-    if (file_exists($target_file)) {
-         echo "Sorry, file already exists.";
-         $uploadOk = 0;
-          }
-
-      // Check file size
-    if ($_FILES["fileToUpload"]["size"] > 500000) {
-        echo "Sorry, your file is too large.";
-        $uploadOk = 0;
-      }
-
-     // Allow certain file formats
-     if($imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jpeg"
-       && $imageFileType != "gif" ) {
-      echo "Sorry, only JPG, JPEG, PNG & GIF files are allowed.";
-       $uploadOk = 0;
-       }
-
-     // Check if $uploadOk is set to 0 by an error
-    if ($uploadOk == 0) {
-      echo "Sorry, your file was not uploaded.";
-    // if everything is ok, try to upload file
-    } else {
-        if (move_uploaded_file($_FILES["fileToUpload"]["tmp_name"], $target_file)) {
-          echo "The file ". basename( $_FILES["fileToUpload"]["name"]). " has been uploaded.";
-       } else {
-          echo "Sorry, there was an error uploading your file.";
-      }
-    }
-  ?>
-
-
-</article>
-
-<footer>
-  <p>Copyright © 2024 Official Portal - UMPSA Universiti Malaysia Pahang Al-Sultan Abdullah (Malaysia University) - Public University in Pahang· All rights reserved</p>
-</footer>
-
-</body>
+<h1 class="mb-4">Edit Vehicle</h1>
+<form action="updatevehicle.php  method="post">
+    <div class="row mb-3">
+        <div class="col-2 col-form-label">
+            <label for="vehicle_type">Vehicle Type</label>
+        </div>
+        <div class="col">
+            <input type="text" class="form-control" value="<?= $vehicle_type ?>" id="vehicle_type" name="vehicle_type">
+        </div>
+    </div>
+    <div class="row mb-3">
+        <div class="col-2 col-form-label">
+            <label for="vehicle_plate" class="form-label">Vehicle Plate</label>
+        </div>
+        <div class="col">
+            <input type="text" id="vehicle_plate" name="vehicle_plate" value="<?= $vehicle_plate ?>" class="form-control">
+        </div>
+    </div>
+    <div class="row">
+        <div class="col d-flex gap-3">
+            <button class="btn btn-primary">Submit</button>
+        </div>
+    </div>
+</form>
 </html>

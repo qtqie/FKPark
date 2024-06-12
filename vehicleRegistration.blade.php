@@ -1,9 +1,14 @@
+<?php
+session_start(); // Start the session
+
+// Display success or error message if set
+?>
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Vehicle Information</title>
+<title>Vehicle Registration</title>
 <style>
 * {
   box-sizing: border-box;
@@ -97,33 +102,32 @@ article {
   box-shadow: 0px 0px 15px rgba(0,0,0,0.2);
 }
 
-/* Table styling */
-table {
-  width: 100%;
-  border-collapse: collapse;
+/* Form styling */
+form {
+  display: flex;
+  flex-direction: column;
 }
 
-table, th, td {
-  border: 1px solid #ccc;
+label {
+  margin-top: 10px;
 }
 
-th, td {
+input, select, button {
+  margin-top: 5px;
   padding: 10px;
-  text-align: left;
+  border: 1px solid #ccc;
+  border-radius: 5px;
 }
 
-th {
+button {
   background-color: #3EA99F;
   color: white;
+  border: none;
+  cursor: pointer;
 }
 
-/* Change background color for specific header cells */
-th.date, th.start-time, th.end-time {
-  background-color: #3EA99F; /* Your desired color */
-}
-
-tr:nth-child(even) {
-  background-color: #f2f2f2;
+button:hover {
+  background-color: #808080;
 }
 
 /* Style the footer */
@@ -133,19 +137,8 @@ footer {
   text-align: center;
   color: white;
 }
-
-/* Change background color for specific content cells */
-td.date, td.start-time, td.end-time {
-  background-color: white; /* Change to white color */
-}
 </style>
 </head>
-<script>
-function deleteRow(btn) {
-  var row = btn.parentNode.parentNode;
-  row.parentNode.removeChild(row);
-}
-</script>
 <body>
 
 <header>
@@ -168,7 +161,7 @@ function deleteRow(btn) {
       <a href="ManageProfile" class="dropbtn">Profile</a>
       <div class="dropdown-content">
         <a href="studentpage.blade.php">Manage User Profile</a>
-        <a href="vehicleRegistration.blade.php">Register Vehicle Information</a>
+        <a href="vehicleRegistration.blade.php">Manage Vehicle Information</a>
         <a href="userDashboard.blade.php">User Dashboard</a>
       </div>
     </li>
@@ -191,40 +184,54 @@ function deleteRow(btn) {
     </li>
   </ul>
 </header>
+
 <article>
-  <h2>View Information</h2>
+  <h2>Vehicle Registration</h2>
+  <?php if(isset($_SESSION['message'])): ?>
+    <div class="alert alert-<?=$_SESSION['msg_type']?>">
+        <?php 
+            echo $_SESSION['message'];
+            // Clear the message from the session after displaying it
+            unset($_SESSION['message']);
+            unset($_SESSION['msg_type']);
+        ?>
+    </div>
+<?php endif; ?>
+<!-- Check if there is an error message in the session and display it -->
+<?php if(isset($_SESSION['error_message'])): ?>
+    <div class="alert alert-danger">
+        <?php 
+            echo $_SESSION['error_message'];
+            // Clear the error message from the session after displaying it
+            unset($_SESSION['error_message']);
+        ?>
+    </div>
+<?php endif; ?>
+<form action="submitvehicle.php" method="post" enctype="multipart/form-data">
+    <label for="vehicle_id">Vehicle ID:</label>
+    <input type="text" id="vehicle_id" name="vehicle_id" required>
 
-<table>
-    <thead>
-      <tr>
-        <th>Vehicle Id</th>
-        <th>Vehicle Type</th>
-        <th>Vehicle Plate</th>
-        <th>Action</th>
-      </tr>
-    </thead>
-    <tbody>
-    <?php
-      // Include the PHP file to connect to the database
-      include 'vehiclesubmit.php';
+    <label for="vehicle_type">Vehicle Type:</label>
+    <input type="text" id="vehicle_type" name="vehicle_type" required>
 
-      // Fetch data from the database
-      $vehicle_info = vehicle_info();
+    <label for="vehicle_plate">Vehicle Number Plate:</label>
+    <input type="text" id="vehicle_plate" name="vehicle_plate" required>
 
-      // Output data of each row
-      foreach ($vehicle_info as $info) {
-          echo "<tr>";
-          echo "<td>" . $info['vehicle_id'] . "</td>";
-          echo "<td>" . $info['vehicle_type'] . "</td>";
-          echo "<td>" . $info['vehicle_plate'] . "</td>";
-          echo "<td><a href='deletevehicle.php'><button>Delete</button></a><a href='editvehicle.php'><button>Edit</button></a></td>";
-          echo "</tr>";
-      }
-      ?>
-    </tbody>
-  </table>
-  <script>
-function confirmDelete() {
-  return confirm('Are you sure you want to delete this record?');
-}
-</script>
+    <div class="input-group">
+        <label for="vehicle_grant">Vehicle Grant:</label>
+        <input type="file" id="vehicle_grant" name="vehicle_grant" accept=".pdf, .jpg, .jpeg, .png" required>
+        <span class="file-upload-help">Upload a PDF or image file (max size 2MB).</span>
+    </div>
+
+    <button type="submit">Register Vehicle</button>
+</form>
+
+
+</article>
+
+<footer>
+  <p>Copyright © 2024 Official Portal - UMPSA Universiti Malaysia Pahang Al-Sultan Abdullah (Malaysia University) - Public University in Pahang· All rights reserved</p>
+</footer>
+
+</body>
+</html>
