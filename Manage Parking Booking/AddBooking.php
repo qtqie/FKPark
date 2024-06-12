@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Add Booking Page</title>
+<title>Add Booking</title>
 <style>
 * {
   box-sizing: border-box;
@@ -91,7 +91,8 @@ li.dropdown {
 article {
   margin: 20px auto;
   padding: 20px;
-  width: 70%;
+  width: 80%;
+  max-width: 800px;
   background-color: #f1f1f1;
   border-radius: 10px;
   box-shadow: 0px 0px 15px rgba(0,0,0,0.2);
@@ -99,53 +100,37 @@ article {
 
 /* Form styling */
 form {
-  background-color: #ffffff;
-  padding: 20px;
-  border-radius: 10px;
-  box-shadow: 0px 0px 10px rgba(0,0,0,0.1);
+  display: flex;
+  flex-direction: column;
 }
 
-form label {
-  font-weight: bold;
+label {
   margin-top: 10px;
-  display: block;
+  font-weight: bold;
 }
 
-form input[type="text"], form input[type="radio"] {
-  margin-bottom: 10px;
-}
-
-form input[type="text"] {
-  width: calc(100% - 22px);
+input[type="text"],
+input[type="time"],
+input[type="date"],
+select {
   padding: 10px;
-  margin-bottom: 20px;
+  margin-top: 5px;
   border: 1px solid #ccc;
   border-radius: 5px;
 }
 
-form input[type="radio"] {
-  margin-right: 10px;
-}
-
-form input[type="submit"], form input[type="reset"] {
+button {
+  margin-top: 20px;
+  padding: 10px;
   background-color: #3EA99F;
   color: white;
   border: none;
-  padding: 10px 20px;
-  margin-right: 10px;
   border-radius: 5px;
   cursor: pointer;
 }
 
-form input[type="submit"]:hover, form input[type="reset"]:hover {
+button:hover {
   background-color: #808080;
-}
-
-/* Clear floats after the columns */
-section::after {
-  content: "";
-  display: table;
-  clear: both;
 }
 
 /* Style the footer */
@@ -156,88 +141,69 @@ footer {
   color: white;
 }
 
-/* Responsive layout - makes the two columns/boxes stack on top of each other instead of next to each other, on small screens */
-@media (max-width: 600px) {
-  article {
-    width: 100%;
-    height: auto;
-  }
-}
-
-li {
-  border-right: 1px solid #bbb;
-}
-
-li:last-child {
-  border-right: none;
-}
-
-li a {
-  display: block;
-  color: white;
+.qr-code {
+  margin: 20px 0;
   text-align: center;
-  padding: 14px 16px;
-  text-decoration: none;
 }
 
-li a:hover:not(.active) {
-  background-color: #808080;
+.qr-code img {
+  width: 200px;
+  height: 200px;
 }
 </style>
 </head>
 <body>
 
 <header>
+  
   <div style="display: flex; align-items: center;">
-    <img src="Assets/UMPLogo.jpeg" alt="UMPLogo" style="width:75px;height:86px;">
+    <img src="../Assets/UMPLogo.jpeg" alt="UMPLogo" style="width:75px;height:86px;">
     <h2>FKPark</h2>
   </div>
   <ul>
-    <li><a class="active" href="#home">Home</a></li>
-
+    <li><a class="active" href="homepage.blade.php">Home</a></li>
     <li class="dropdown">
-      <a href="AddBooking.php" class="dropbtn">Booking</a>
+      <a href="../Module3/AddBooking.php" class="dropbtn">Booking</a>
       <div class="dropdown-content">
-        <a href="AddBooking.php">Add Booking</a>
-        <a href="ViewBooking.php">View Booking</a>
+        <a href="../Module3/AddBooking.php">Add Booking</a>
+        <a href="../Module3/view_booking.php">View My Booking</a>
+        <a href="../Module3/ViewBooking.php">View Available Parking</a>
       </div>
     </li>
-
     <li><a href="#tsummon">Traffic Summon</a></li>
-
     <li><a href="#help">Help</a></li>
-
     <li class="dropdown">
       <a href="Parkingsetting" class="dropbtn">Parking Setting</a>
       <div class="dropdown-content">
-        <a href="#">Create Park</a>
-        <a href="#">Update Park</a>
-        <a href="#">Delete Park</a>
-        <a href="#">View Park</a>
+        <a href="createparkingspace.php">Create Park</a>
+        <a href="updateparking.php">Update Park</a>
+        <a href="deleteparking.php">Delete Park</a>
+        <a href="submitupdateparking.php">View Park</a>
       </div>
     </li>
-
     <li style="float:right" class="dropdown">
       <a href="profile" class="dropbtn">Profile</a>
       <div class="dropdown-content">
-        <a href="#">Sign Up</a>
-        <a href="#">Log In</a>
+        <a href="registration.blade.php">Sign Up</a>
+        <a href="LoginPage.php">Log In</a>
       </div>
     </li>
   </ul>
 </header>
 
-<section>
-  <article>
-  <form action="submit_bookingtest.php" method="post">
 
-      <label for="name">Name:</label>
-      <input type="text" id="name" name="name" value="ABC">
+<article>
+  <h2>Add Booking</h2>
+  <?php if (isset($error_message)) echo $error_message; ?>
+  <form action="../Module3/ConfirmBookingPage.php" method="post">
+
+  <label for="name">Name:</label>
+      <input type="text" id="name" name="name" value="ABC" required>
       
       <label for="id">ID number:</label>
-      <input type="text" id="id" name="id" value="CXXXXXX">
+      <input type="text" id="id_number" name="id_number" value="CXXXXXX" required>
 
-      <p>Choose your parking area:</p>
+      <label for="parking_area">Choose your parking area:</label>
       <input type="radio" id="A1" name="parking_area" value="A1">
       <label for="A1">A1</label><br>
       <input type="radio" id="A2" name="parking_area" value="A2">
@@ -251,11 +217,23 @@ li a:hover:not(.active) {
       <input type="radio" id="B3" name="parking_area" value="B3">
       <label for="B3">B3</label><br><br>
 
-      <input type="reset" value="Clear">
-      <input type="submit" value="Submit">
-    </form>
-  </article>
-</section>
+    <label for="car-plate">Car Plate Number:</label>
+    <input type="text" id="car-plate" name="car-plate" required>
+
+    <label for="start-time">Start Time:</label>
+    <input type="time" id="start-time" name="start-time" required>
+
+    <label for="date">Date:</label>
+    <input type="date" id="date" name="date" required>
+
+    <label for="duration">Expected Parking Duration (in hours):</label>
+    <input type="text" id="duration" name="duration" required>
+
+
+    <input type="reset" value="Clear">
+    <button type="submit">Confirm Parking</button>
+  </form>
+</article>
 
 <footer>
   <p>Copyright © 2024 Official Portal - UMPSA Universiti Malaysia Pahang Al-Sultan Abdullah (Malaysia University) - Public University in Pahang· All rights reserved</p>
