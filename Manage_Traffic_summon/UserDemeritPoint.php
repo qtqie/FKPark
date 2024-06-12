@@ -42,7 +42,6 @@ $conn->close();
 >
 
 
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -291,10 +290,10 @@ th {
     <li class="dropdown">
       <a href="#tsummon" class="dropbtn">Traffic Summon</a>
       <div class="dropdown-content">
-        <a href="TrafficSummonDashboard.php">Traffic Summon Dashboard</a>
-        <a href="InsertSummonDetail.php">Insert Summon Detail</a>
-        <a href="ViewTrafficSummon.php">View Summon</a>
-        <a href="UserDemeritPoint.php">User Demerit Point</a>
+      <a href="../module4/TrafficSummonDashboard.php">Traffic Summon Dashboard</a>
+        <a href="../module4/InsertSummonDetail.php">Insert Summon Detail</a>
+        <a href="../module4/ViewTrafficSummon.php">View Summon</a>
+        <a href="../module4/UserDemeritPoint.php">User Demerit Point</a>
       </div>
     </li>
     <li><a href="#help">Help</a></li>

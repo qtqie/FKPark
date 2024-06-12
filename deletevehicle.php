@@ -26,4 +26,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
   header("Location: viewvehicle.php");
   exit();
 }
+
+
+$conn->close();
 ?>

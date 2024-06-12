@@ -13,41 +13,42 @@ if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
-// Check if form was submitted
+$vehiclePlate = "";
+$vehicleType = "";
+
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    // Sanitize input data
+    // Retrieve and sanitize input data from Coding 1
     $vehiclePlate = htmlspecialchars($_POST['VehiclePlate']);
-    $vehicleType = htmlspecialchars($_POST['VehicleType']);
-    $violationType = htmlspecialchars($_POST['ViolationType']);
-    $datetime = htmlspecialchars($_POST['datetime']);
-    $description = htmlspecialchars($_POST['Description']);
-    $demeritPoint = htmlspecialchars($_POST['DemeritPoint']);
+    $vehicleType = htmlspecialchars($_POST['Vehicle_Type']);
 
-    // Prepare and bind parameters
-    $stmt = $conn->prepare("INSERT INTO trafficsummon (vehicle_plate, vehicle_type, violation_type, datetime, description, demerit_point) VALUES (?, ?, ?, ?, ?, ?)");
-    if ($stmt === false) {
-        die("Prepare failed: " . htmlspecialchars($conn->error));
+    // Check if this is the final form submission
+    if (isset($_POST['ViolationType'])) {
+        $violationType = htmlspecialchars($_POST['ViolationType']);
+        $datetime = htmlspecialchars($_POST['datetime']);
+        $description = htmlspecialchars($_POST['Description']);
+        $demeritPoint = htmlspecialchars($_POST['DemeritPoint']);
+
+        // Prepare and bind parameters
+        $stmt = $conn->prepare("INSERT INTO trafficsummon (vehicle_plate, vehicle_type, violation_type, datetime, description, demerit_point) VALUES (?, ?, ?, ?, ?, ?)");
+        if ($stmt === false) {
+            die("Prepare failed: " . htmlspecialchars($conn->error));
+        }
+
+        $stmt->bind_param("sssssi", $vehiclePlate, $vehicleType, $violationType, $datetime, $description, $demeritPoint);
+        if ($stmt->execute()) {
+            header("Location: ViewTrafficSummon.php");
+            exit();
+        } else {
+            echo "Execute failed: " . htmlspecialchars($stmt->error);
+        }
+
+        $stmt->close();
     }
-
-    $bind = $stmt->bind_param("sssssi", $vehiclePlate, $vehicleType, $violationType, $datetime, $description, $demeritPoint);
-    if ($bind === false) {
-        die("Bind failed: " . htmlspecialchars($stmt->error));
-    }
-
-    // Execute the query
-    if ($stmt->execute()) {
-        header("Location: ViewTrafficSummon.php");
-        exit();
-    } else {
-        echo "Execute failed: " . htmlspecialchars($stmt->error);
-    }
-
-
-    $stmt->close();
 }
 
 $conn->close();
 ?>
+
 
 
 
@@ -250,10 +251,10 @@ $conn->close();
     <li class="dropdown">
       <a href="#tsummon" class="dropbtn">Traffic Summon</a>
       <div class="dropdown-content">
-        <a href="TrafficSummonDashboard.php">Traffic Summon Dashboard</a>
-        <a href="InsertSummonDetail.php">Insert Summon Detail</a>
-        <a href="ViewTrafficSummon.php">View Summon</a>
-        <a href="UserDemeritPoint.php">User Demerit Point</a>
+      <a href="../module4/TrafficSummonDashboard.php">Traffic Summon Dashboard</a>
+        <a href="../module4/InsertSummonDetail.php">Insert Summon Detail</a>
+        <a href="../module4/ViewTrafficSummon.php">View Summon</a>
+        <a href="../module4/UserDemeritPoint.php">User Demerit Point</a>
       </div>
     </li>
     <li><a href="#help">Help</a></li>
@@ -276,17 +277,17 @@ $conn->close();
   </ul>
 </header>
 <section>
-    <article>
-    <form id="summonForm" action="" method="post">
+<article>
+<form id="summonForm" action="" method="post">
     <div>
         <label for="VehiclePlate">Vehicle Plate:</label>
-        <input type="text" id="VehiclePlate" name="VehiclePlate" required> 
+        <input type="text" id="VehiclePlate" name="VehiclePlate" value="<?php echo $vehiclePlate; ?>" required> 
     </div>
     <div>
         <label for="VehicleType">Vehicle Type:</label>
-        <select id="VehicleType" name="VehicleType" required> 
-            <option value="Car">Car</option>
-            <option value="Motorcycle">Motorcycle</option>
+        <select id="VehicleType" name="VehicleType" required>
+            <option value="Car" <?php if ($vehicleType == 'Car') echo 'selected'; ?>>Car</option>
+            <option value="Motorcycle" <?php if ($vehicleType == 'Motorcycle') echo 'selected'; ?>>Motorcycle</option>
         </select>
     </div>
     <div>
@@ -308,9 +309,7 @@ $conn->close();
     <div>
         <button type="submit">Create</button> 
     </div>
-    <input type="hidden" id="formAction" name="action" value=""> 
 </form>
-
     </article>
 </section>
 <script>

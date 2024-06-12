@@ -159,12 +159,7 @@ td.date, td.start-time, td.end-time {
 }
 </style>
 </head>
-<script>
-function deleteRow(btn) {
-  var row = btn.parentNode.parentNode;
-  row.parentNode.removeChild(row);
-}
-</script>
+
 <body>
 
 <header>
@@ -223,30 +218,35 @@ function deleteRow(btn) {
       </tr>
     </thead>
     <tbody>
-  
-    <?php
-    if (mysqli_num_rows($result) > 0) {
-        // Output data of each row
-        while ($info = mysqli_fetch_assoc($result)) {
-            echo "<tr>";
-            echo "<td>" . $info['vehicle_id'] . "</td>";
-            echo "<td>" . $info['vehicle_type'] . "</td>";
-            echo "<td>" . $info['vehicle_plate'] . "</td>";
-            echo "<td>
-                    <a href='editvehicle.php?vehicle_id=" . $info['vehicle_id'] . "'>Edit Vehicle</a>
-        
-                    <form action='deletevehicle.php' method='post'>
-                        <input type='hidden' name='vehicle_id' value='" . $info['vehicle_id'] . "'>
-                        <input type='submit' value='Delete'>
-                    </form>
-                </td>";
-            echo "</tr>";
-        }
-    } else {
-        echo "<tr><td colspan='4'>No vehicles found</td></tr>";
-    }
-    ?>
-</tbody>
+      <?php
+      include("dbase.php"); // Include your database connection file
+
+      // Fetch vehicle data from the database
+      $query = "SELECT * FROM vehicle_info";
+      $result = mysqli_query($conn, $query);
+
+      if (mysqli_num_rows($result) > 0) {
+          // Output data of each row
+          while ($info = mysqli_fetch_assoc($result)) {
+              echo "<tr>";
+              echo "<td>" . $info['vehicle_id'] . "</td>";
+              echo "<td>" . $info['vehicle_type'] . "</td>";
+              echo "<td>" . $info['vehicle_plate'] . "</td>";
+              echo "<td>
+                      <a href='editvehicle.php?vehicle_id=" . $info['vehicle_id'] . "'>Edit Vehicle</a>
+          
+                      <form action='deletevehicle.php' method='post'>
+                          <input type='hidden' name='vehicle_id' value='" . $info['vehicle_id'] . "'>
+                          <input type='submit' value='Delete'>
+                      </form>
+                  </td>";
+              echo "</tr>";
+          }
+      } else {
+          echo "<tr><td colspan='4'>No vehicles found</td></tr>";
+      }
+      ?>
+    </tbody>
 
     </tbody>
   </table>

@@ -180,10 +180,10 @@ footer {
     <li class="dropdown">
       <a href="#tsummon" class="dropbtn">Traffic Summon</a>
       <div class="dropdown-content">
-        <a href="TrafficSummonDashboard.php">Traffic Summon Dashboard</a>
-        <a href="InsertSummonDetail.php">Insert Summon Detail</a>
-        <a href="ViewTrafficSummon.php">View Summon</a>
-        <a href="UserDemeritPoint.php">User Demerit Point</a>
+        <a href="../module4/TrafficSummonDashboard.php">Traffic Summon Dashboard</a>
+        <a href="../module4/InsertSummonDetail.php">Insert Summon Detail</a>
+        <a href="../module4/ViewTrafficSummon.php">View Summon</a>
+        <a href="../module4/UserDemeritPoint.php">User Demerit Point</a>
       </div>
     </li>
     <li><a href="#help">Help</a></li>
@@ -208,21 +208,21 @@ footer {
 
 <section>
   <article>
-    <form action="InsertSummonDetail.php" method="post">
+  <form action="InsertSummonDetail.php" method="post">
       <div>
         <label for="id">ID:</label>
-        <input type="number" id="id" name="id">
+        <input type="text" id="id" name="id" required>
       </div>
       <div>
-        <label for="VehicleType">Vehicle Type:</label>
-        <select id="VehicleType" name="VehicleType">
+        <label for="Vehicle_Type">Vehicle Type:</label>
+        <select id="Vehicle_Type" name="Vehicle_Type" required>
             <option value="Car">Car</option>
             <option value="Motorcycle">Motorcycle</option>
         </select>
       </div>
       <div>
-        <label for="VehiclePlate">Vehicle Plate:</label>
-        <input type="text" id="VehiclePlate" name="VehiclePlate">
+        <label for="vehicle_plate">Vehicle Plate:</label>
+        <input type="text" id="vehicle_plate" name="VehiclePlate" required>
       </div>
       <div>
         <input type="submit" value="Submit">
@@ -273,7 +273,7 @@ if(isset($_GET['id']) && isset($_GET['vehiclePlate'])) {
         while ($row = $result->fetch_assoc()) {
             echo "<p>ID: " . $row['id'] . "</p>";
             echo "<p>Vehicle Plate: " . $row['vehicle_plate'] . "</p>";
-            echo "<p>Vehicle Type: " . $row['vehicle_Type'] . "</p>";
+            echo "<p>Vehicle Type: " . $row['Vehicle_Type'] . "</p>";
             echo "<p>Violation Type: " . $row['violation_type'] . "</p>";
             echo "<p>Date / Time: " . $row['datetime'] . "</p>";
             echo "<p>Description: " . $row['description'] . "</p>";
@@ -287,5 +287,25 @@ if(isset($_GET['id']) && isset($_GET['vehiclePlate'])) {
     $stmt->close();
 }
 
+// Insertion of form data into database
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $id = $_POST['id'];
+    $vehicleType = $_POST['Vehicle_Type'];
+    $vehiclePlate = $_POST['VehiclePlate'];
+
+    $sql = "INSERT INTO vehicleregisteration (id, Vehicle_Type, vehicle_plate) VALUES (?, ?, ?)";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("iss", $id, $vehicleType, $vehiclePlate);
+
+    if ($stmt->execute()) {
+        echo "New record inserted successfully";
+    } else {
+        echo "Error: " . $stmt->error;
+    }
+
+    $stmt->close();
+}
+
 $conn->close();
 ?>
+
